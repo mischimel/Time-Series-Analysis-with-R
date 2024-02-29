@@ -1,27 +1,26 @@
 ---
-title: "P1-04-Fille.qmd"
+title: "TSAR Project Part 1"
 author: "Michèle Fille"
+date: 01.03.2024
 format: pdf
 editor: visual
+execute: 
+  warning: false
+  error: false
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+## Preliminaries
 
 ```{r}
-1 + 1
+#| label: install packages
+
+install.packages("data.table") 
+install.packages("dplyr") 
+library(data.table) 
+library(dplyr)
+
+LCdata <- fread("LCdata.csv")
+
+set.seed(4) 
+myLCdata <- LCdata %>% sample(5) %>% slice_sample(prop = .5)
 ```
-
-You can add options to executable code like this
-
-```{r}
-#| echo: false
-2 * 2
-```
-
-The `echo: false` option disables the printing of code (only output is displayed).
