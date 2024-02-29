@@ -1,5 +1,7 @@
 ---
 title: "Hello, Quarto"
+author: Michèle Fille
+date: 07.11.2024
 format: html
 editor: visual
 ---
