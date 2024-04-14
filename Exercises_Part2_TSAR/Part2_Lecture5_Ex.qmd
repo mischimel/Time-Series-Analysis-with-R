@@ -1,0 +1,39 @@
+---
+title: "Time Series Analysis with R Part 1, Lecture 5"
+author: "Michèle Fille"
+format: html
+prefer-html: true
+editor: visual
+toc: true
+toc-depth: 4
+error: true
+warning: true
+---
+
+# Lecture 5 – Time Series Fundamentals
+
+## 5.1 Introduction
+
+### Exercise 5.1. Introduction
+
+#### Exercise 5.1: Predictor Variables
+
+Read the following case. List the possible predictor variables that might be useful, assuming that the relevant data are available.
+
+Case: Car Fleet Company
+
+A large car fleet company asks us to help them forecast vehicle resale values. They purchase new vehicles, lease them out for three years, and then sell them. Better forecasts of vehicle sales values would mean better control of profits; understanding what affects resale values may allow leasing and sales policies to be developed in order to maximise profits. The resale values are being forecast by a group of specialists. Unfortunately, they see any statistical model as a threat to their jobs, and are uncooperative in providing information. Nevertheless, the company provides a large amount of data on previous vehicles and their eventual resale values.
+
+### Self-Study 5.1. Introduction
+
+#### Self-Study 5.1: Steps of Forecasting
+
+For the case described in Exercise 5.1, describe the five steps of forecasting in the context of this project.
+
+## 5.2 Time Series in R 
+
+50
+
+## 5.3 Visualizing Time Series
+
+93
