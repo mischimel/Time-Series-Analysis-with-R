@@ -1,0 +1,88 @@
+---
+title: "Test Quarto things"
+author: "Michèle Fille"
+format: html
+editor: visual
+toc: true
+toc-depth: 4
+error: true
+warning: true
+# message: false
+# errors must be set to true, otherwise no outputfile will be created if set to false
+# warning and message set to false, so that no warning message gets shown in outputfile
+---
+
+# using global setting (no warning message)
+
+```{r}
+# using global setting (no warning message)
+
+sqrt(-1) # warning message
+
+"1" + "5" # error message
+```
+
+# "override" global setting (no warning message)
+
+```{r}
+#| warning: false
+##| message: false
+# the following needed to not show the warning message (error message gets always shown, or if in the YAMAL header error: false, it will not create the desired output file )
+
+sqrt(-1) # warning message
+
+"1" + "5" # error message
+```
+
+# "override" global setting (warning message)
+
+```{r}
+#| warning: true
+##| message: true
+# when in the YAMAL header global settings are to not show the error message, then you can override it with this, to show the warning messages:
+
+sqrt(-1) # warning message
+
+"1" + "5" # error message
+```
+
+This @fig-mpg-geom-point is cross referenced
+
+```{r}
+#| label: fig-mpg-geom-point
+#| fig-cap: Scatterplot of Fuel economy data from 1999 to 2008 for 38 popular models of cars
+
+# install.packages("ggplot2") # already installed
+library(ggplot2)
+mpg_plot <- ggplot(mpg, aes(x = displ, y = hwy)) + geom_point(aes(colour = class))
+
+mpg_plot
+```
+
+The following @tbl-mp-ages:\
+
+```{r}
+#| label: tbl-mp-ages
+#| tbl-cap: Table see how ages
+
+names <- c("Michele", "Pelin", "Selina")
+ages <- c(28,29,28)
+
+table_mps <- table(ages, names)
+table_mps
+```
+
+```{r}
+#| label: fig-plots
+#| fig-cap: "Plots" 
+#| fig-subcap:
+#|   - "Plot 1"
+#|   - "Plot 2" 
+#| layout-ncol: 2
+
+# Plot 1
+plot(c(1, 23, 2, 4), type = "l")
+
+# Plot 2
+plot(c(8, 65, 23, 90), type = "l")
+```

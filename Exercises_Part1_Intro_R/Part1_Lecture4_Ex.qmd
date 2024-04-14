@@ -1,0 +1,309 @@
+---
+title: "R for Data Analytics Part 1, Lecture 4"
+author: "Michèle Fille"
+format: html
+prefer-html: true
+editor: visual
+toc: true
+toc-depth: 4
+error: true
+warning: true
+---
+
+# Lecture 4 – Packages for Data Wrangling: dplyr and tidyr
+
+## 4.1 Manipulating data with dplyr
+
+### Exercise 4.1. dyplyr
+
+#### Exercise 4.1: Practicing with dplyr Verbs and Pipes
+
+Install the nycflights13 package and load it. Also load dplyr.
+
+a\) The data frame flights is now accessible to you. Use appropriate functions to inspect it:
+
+-   How many rows and columns does it have?
+
+-   What are the names of the columns?
+
+-   Use ??flights to search for documentation on the data set (for what the columns represent).
+
+b)  Use dplyr to give the data frame a new column that is the amount of time gained or lost while flying (that is: how much of the delay arriving occurred during flight, as opposed to before departing).
+
+-   Hint: If your new column doesn't show up with print(), look at the bottom of the output written in grey: Maybe there was not enough space to print it in your console window! In this case you use print(flights, width = Inf) to show all columns.
+
+c\) Use dplyr to sort your data frame in descending order by the column you just created. Save it as a variable (or in the same one!)
+
+d\) For practice, repeat the last 2 steps in a single statement using the pipe operator. You can clear your environmental variables to "reset" the data frame.
+
+e\) Make a histogram of the amount of time gained using the hist() function from base R. Alternatively, you can use ggplot2 to create a histogram.
+
+-   Hint: Use geom_histogram() to make a histogram with ggplot.
+
+-   Bonus: Compare the two visualizations: what is different and why are they different?
+
+f)  On average, did flights gain or lose time?
+
+-   Note: Use the na.rm = TRUE argument to remove NA values from your aggregation. Otherwise the result will be NA.
+
+g\) Create a data.frame of flights headed to SeaTac ('SEA'), only including the origin, destination, and the gain_in_air column you created.
+
+h\) On average, did flights to SeaTac gain or lose time?
+
+i\) Consider flights from JFK to SEA. What was the average, min, and max air time of those flights?
+
+-   Hint: Don’t forget to use the argument na.rm = TRUE in your aggregations.
+
+-   Bonus: Try to use pipes so that you can answer the last question in one single statement!
+
+### Self-Study 4.1. dyplyr
+
+#### Self-Study 4.1 - Task 1: Using dplyr for Grouping
+
+Install the nycflights13 package (if needed) and load it. Also load dplyr. View the data set flights .
+
+a\) What was the average departure delay in each month? Save this as a data frame dep_delay_by_month.
+
+-   Hint: you'll have to perform a grouping operation then summarizing your data.
+
+b\) Which month had the greatest average departure delay?
+
+c\) If your data frame dep_delay_by_month contains only two columns (e.g., "month", and "delay” in that order), you can create a scatterplot by passing that data frame directly to the base R function plot(). It is a generic function, that automatically makes a scatterplot when passed a data frame with 2 columns.
+
+-   Alternatively, you can of course also use ggplot2 to create the scatterplot.
+
+d\) To which destinations were the average arrival delays the highest?
+
+-   Hint: you'll have to perform a grouping operation then summarize your data. You can use the head() function to view just the first few rows for checking.
+
+e\) The package nycflights13 also includes a data frame called airports. You can look up the above destinations in the airports data frame!
+
+f\) Which city was flown to with the highest average speed?
+
+#### Self-Study 4.1 - Task 2: Using the dplyr Join Operations
+
+Install the nycflights13 package (if needed) and load it. Also load dplyr. View the data set flights .
+
+a\) Create a dataframe of the average arrival delays for each destination from the flights data frame. Then use left_join() to join on the airports dataframe.
+
+-   Remark: The airports dataframe is also part of the nycflights13 package and holds information about the airports.
+
+b\) Which airport had the largest average arrival delay?
+
+c\) Create a dataframe of the average arrival delay for each airline, then use left_join() to join on the airlines dataframe (which is also part of the nycflights13 package).
+
+d\) Which airline had the smallest average arrival delay?
+
+#### Self-Study 4.1 – Task 3: Comparing base R and dplyr
+
+a\) Install and load dplyr if needed.
+
+b\) Install and load the fueleconomy package from GitHub as follows:
+
+-   Install the devtools package (as usual).
+
+-   The devtool package allows us to make installations from GitHub. Use the following command to install the fueleconomy package from GitHub: devtools::install_github("hadley/fueleconomy")
+
+-   Load the fueleconomy package as usual.
+
+c\) Now you have access to the vehicles data frame. Use View() to get a first impression. Select from this data frame the column makes, which holds the different car manufacturers. Save it in the variable makes.
+
+-   Hint: Since you made a selection on a data frame, the result is a vector.
+
+d\) Use the function unique() to list and count the different car manufacturers. Alternatively, use the dplyr function distinct()to do the same. What is the difference?
+
+e\) Filter the data set for vehicles manufactured in 1997. Do it first with base R, then with dplyr alone, then with dplyr and piping.
+
+f\) Arrange (sort, order) the 1997 cars by highway (hwy) gas milage (in increasing order). Do it first with base R, then with dplyr alone, then with dplyr and piping.
+
+-   Hint: In base R, use the order() function to get a vector of indices in order by value.
+
+g\) Mutate the ordered 1997 cars data frame to add a column average that holds the average gas milage (between city and highway mpg) for each car. Do it first with base R, then with dplyr alone, then with dplyr and piping.
+
+h\) Filter the whole vehicles data set for 2-Wheel Drive vehicles that get more than 20 miles/gallon in the city. Save this new data frame in a variable. Do it first with base R, then with dplyr alone, then with dplyr and piping.
+
+i ) Of the above vehicles, what is the vehicle ID of the vehicle with the worst (i.e., smallest) hwy mpg? Do it first with base R, then with dplyr alone, then with dplyr and piping.
+
+-   Hint: filter for the worst vehicle, then select its ID.
+
+j\) Write a function that takes a year_choice and a make_choice as parameters, and returns the vehicle model that has the best (i.e., highest) hwy miles/gallon of vehicles of that make in that year. You'll need to filter more (and do some selecting)! Do it first with base R, then with dplyr alone, then with dplyr and piping.
+
+k\) What was the most efficient Honda model of 1995 ? (Use your function!)
+
+## 4.2 Reshaping data with tidyr
+
+### Exercise 4.2. tidyr
+
+#### Exercise 4.2 – Task 1: Plotting Time Series of Weights
+
+Consider the following toy data set of weight time series per person:
+
+```{r}
+name <- c('ann', 'bob', 'charlie') 
+jan <- c(102, 155, 211) 
+feb <- c(112, 150, 211) 
+mar <- c(123, 147, 213) 
+apr <- c(130, 140, 210) 
+wts <- tibble(name=name, jan=jan, feb=feb, mar=mar, apr=apr)
+```
+
+a\) Copy / paste it in your R-script, view it and answer the following questions:
+
+-   What is the observed event?
+
+-   What are the recorded aspects of the event?
+
+-   Is this data set tidy or messy?
+
+-   If messy, describe in words how a tidy version of the data would look.
+
+b\) Tidy up the data set using pivot_longer(). Store the result in a new data frame called wts_tidy.
+
+c\) Use geom_line() to plot the time series of weights per person. Hints:
+
+-   Map month to the x-axes.
+
+-   Map weight to the y-axes.
+
+-   Map name to the color scale.
+
+-   Additionally, use the argument group = name within the aesthetic of geom_line() to group observations by person. Otherwise, geom_line() tries to connect all obersvations with a single line, which does not work.
+
+d\) Notice that the months in your x-axes are ordered alphabetically. That's not the order we want! To change that, use mutate() to change the column month from integer to "ordered factor". Hint:
+
+-   An "ordered factor" is a normal factor, but with an order that we define manually.
+
+-   do that, use the arguments ordered and level as follows: factor(month, ordered = TRUE, levels = c('jan', 'feb', 'mar', 'apr’))
+
+e\) Now redo the plot. The months will now appear in the order you specified above.
+
+f\) Now calculate the minimal, maximal and average weight per person.
+
+-   Hint: Use group_by() and summarize() from dplyr.
+
+#### Exercise 4.2 – Task 2: German Car Manufacturers
+
+The following (made-up) data set lists different German car manufacturers. It reports how many models with a specified number of cylinders have been built per manufacturer.
+
+```{r}
+set.seed(3) cars <- tibble( manufacturer = c("Audi", "BMW", "Mercedes", "Opel", "VW"), 
+                            `3 cyl` = sample(20, 5, replace = TRUE), 
+                            `4 cyl` = sample(50:100, 5, replace = TRUE),
+                            `5 cyl` = sample(10, 5, replace = TRUE),
+                            `6 cyl` = sample(30:50, 5, replace = TRUE), 
+                            `8 cyl` = sample(20:40, 5, replace = TRUE), 
+                            `10 cyl` = sample(10, 5, replace = TRUE), 
+                            `12 cyl` = sample(20, 5, replace = TRUE), 
+                            `16 cyl` = rep(0, 5) 
+) 
+```
+
+a\) Copy / paste the above code in your R-script, view the data set, and answer the following questions:
+
+-   What is the observed event?
+
+-   What are the recorded aspects of the event?
+
+-   Is this data set tidy or messy?
+
+-   If messy, describe in words how a tidy version of the data would look.
+
+b\) Tidy up the data set using pivot_longer(). Store the result in a new data frame cars_tidy.
+
+c)  Use geom_col() to create a bar plot that shows the frequency per cylinder. Use facet_wrap() to create one such plot per manufacturer. Use ggplotly() to make it interactive.
+
+-   Hint: Don’t forget to load the library plotly.
+
+d\) Notice that the number of cylinders is not in a natural order. To change that, use mutate() to change the data type of the variable cyl. To do that, you have 2 options:
+
+1.  You can either convert the variable cyl in an ordered factor,
+
+2.  or you can use gsub("\\D", "", cyl) and as.numeric() to extract the numbers from the strings.
+
+Try out both options!
+
+e\) Redo the plot for both options. Do you notice a difference? Which option is better for visualization?
+
+### Self-Study 4.2. tidyr
+
+#### Self-Study 4.2: Analyzing Avocado Sales with tidyr and dplyr
+
+a\) Load the packages tidyr, dplyr, and ggplot2. Download the avocado.csv file from GitHub and load it into a variable avocados. Get a first impression of the data using View() and str().
+
+b\) From str(), you can see that the Date column is of type char. To tell R to treat the Date column as a date and not as a string, transform that column using the as.Date() function.
+
+-   Hint: You can use mutate().
+
+c\) The file has some uninformative column names. Rename these columns:
+
+-   X4046 to small_haas
+
+-   X4225 to large_haas
+
+-   X4770 to xlarge_haas
+
+These are the sales volumes of haas avocados.
+
+d\) The data only holds total sales volumes (Total.Volume) and the sales volumes for haas avocados (small_haas, large_haas, xlarge_haas), but there are also other avocados included in Total.Volume. Double-check this by summing up haas avocado sales and comparing the sum with the total sales value.
+
+e\) Create a new column other_avos that is the Total.Volume minus all haas avocados (small, large, xlarge).
+
+f\) To perform analysis by avocado size, create a dataframe by_size that has only Date, other_avos, small_haas, large_haas, xlarge_haas.
+
+-   Note: other_avos is not strictly a size, but we ignore this. We may view it as the bin that holds the sales volumes of avocados of size “unknown”.
+
+g\) Use head() to view the first few lines of your dataframe by_size.
+
+-   Is it tidy or messy?
+
+-   What is the observed event?
+
+-   What are the recorded aspects?
+
+-   How would a tidy version of the data look?
+
+h\) Tidy it up using pivot_longer(). Store the result in a new data frame by_size_tidy. Hints:
+
+-   The four column names other_avos, small_haas, large_haas, xlarge_haas go into a new column called size.
+
+-   The volumes of sales (currently stored in each of the above columns) go to a new column called volume.
+
+i\) The shape of by_size_tidy is not only tidier, but it also facilitates the visualization of sales over time by size: Use ggplot2 with geom_smooth() to plot a smoothed trendline of sales volumes over time – make one trendline for each size. Hints:
+
+-   Map the Date to the x-axes, map the volume to the y-axes, map the size to the colour scale.
+
+-   Inside of geom_smooth(), you can set the argument se = F to hide the confidence bands around the trendlines.)
+
+Bonus:
+
+-   To see the advantage of this shape for plotting sales over time by size, try to produce the same plot using the data frame by_size instead of the data frame by_size_tidy.
+
+j\) Now use by_size_tidy to compute the average sales volume per size.
+
+-   Hint: First group by size using group_by(), then compute the average using summarize().
+
+k\) We can also investigate sales by avocado type (conventional, organic).
+
+-   To do this, consider again the original avocados data frame.
+
+-   Group it by Date and type, and
+
+-   calculate the sum of the column Total.Volume for each group.
+
+-   Store the result in a new data frame called by_type.
+
+l\) This data set is already tidy. Visualize the avocado sales over time by type using geom_smooth().
+
+-   Note: This is completely analogous to the plot you did before!
+
+m\) From the above plot we see that the sales volumes of both avocado types seem to increase over the years. Now let’s see if we can (visually) confirm this correlation in a scatterplot: if our assumption is correct, we should see a linear correlation between conventional and organic sales. Create this scatterplot using ggplot2. Hints:
+
+-   In order to check for a linear correlation between the types, we must map conventional sales to the x-axes and organic sales to the y-axes.
+
+-   Yet, in the data frame by_type the sales numbers for both avocado types are mingled in one column, namely volume.
+
+-   To facilitate the plotting, it would be good to have one column per type, each holding the respective sales numbers. Then we could simply map each column to an axes.
+
+-   To achieve this, reformat the data frame by_type using pivot_wider(). Store the result in a new data frame called by_type_wide.
+
+-   Now use ggplot2 with geom_point() to generate the scatterplot. Does it confirm our assumption?

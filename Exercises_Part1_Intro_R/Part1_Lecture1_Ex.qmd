@@ -1,0 +1,908 @@
+---
+title: "R for Data Analytics Part 1, Lecture 1"
+author: "Michèle Fille"
+format: html
+prefer-html: true
+editor: visual
+toc: true
+toc-depth: 4
+error: true
+warning: true
+---
+
+# Lecture 1 - Basics and Plotting
+
+## 1.1 A Quick Tour of R and RStudio
+
+### Exercise 1.1. The Basics
+
+#### Exercise 1.1 – Task 1: Magic with numbers
+
+Execute in the Console window the following mathematical operations. If you execute everything correctly, you should end up with the same number that you started with!
+
+1.  Choose any number and add 2 to it.
+
+2.  Multiply the result by 3.
+
+3.  Subtract 6 from the answer.
+
+4.  Divide what you get by 3.
+
+```{r}
+step1 <- 7 + 2      # = 9
+step2 <- step1 * 3  # = 27
+step3 <- step2 - 6  # = 21
+step4 <- step3 / 3  # = 7
+step4
+
+#or
+(((7+2)*3)-6)/3
+```
+
+#### Exercise 1.1 – Task 2: Create an R-skript
+
+-   Create a new **folder** „Lecture_1“ on your computer.
+
+-   Create a new **R-project** in that folder.
+
+-   Create as new **R-skript** in that project.
+
+-   Recreate the **display** on the right (see: @fig-desired-output and for solution @fig-mpg-geom-point.
+
+![Desired Output](Materials%20L1/Exercise%201.1%20–%20Task%202%20Create%20an%20R-skript.PNG){#fig-desired-output}
+
+Note:
+
+-   Don‘t forget to install the ggplot2 package before loading it.
+
+-   The operator \<- assigns the plot output to a variable (mpg_plot).
+
+-   The data set mpg is automatically loaded together with ggplot2. Use ?mpg to see what it is about.
+
+Note:
+
+-   To execute a command in the Source pane, press Strg+Enter (Windows) or command+Enter (Mac).
+
+Remark:
+
+-   It is helpful to make a new R Project in a new folder for each major project you start in on.
+
+```{r}
+#| label: fig-mpg-geom-point
+#| fig-cap: Scatterplot of Fuel economy data from 1999 to 2008 for 38 popular models of cars
+
+# install.packages("ggplot2") # already installed
+library(ggplot2)
+mpg_plot <- ggplot(mpg, aes(x = displ, y = hwy)) + geom_point(aes(colour = class))
+
+mpg_plot
+```
+
+#### Exercise 1.1 – Task 3: Load a csv file with base R
+
+1.  Install and load the libraries readr and data.table.
+
+2.  Download the dataset **female_names.csv** from Moodle.
+
+3.  Load the data set into R using *read_csv()* from base R. **Store it in a variable fnames**. To do that, use **the assignment operator \<-** : *fnames \<- read.csv("female_names.csv")*
+
+4.  To get a first impression of the data set, type **View(fnames)**. Alternatively, you can click on the variable name in the Environments pane.
+
+5.  Now load it again,
+
+-   using *read.csv()* from package readr, and store it in the variable fnames1.
+
+-   using *fread()*, from from package data.table, and store it in the variable fnames2.
+
+Do you experience a difference in performance?
+
+```{r}
+#install.packages("readr") # already installed
+#install.packages("data.table") # already installed
+library(readr)
+library(data.table)
+
+fnames <- read_csv("~/Michele_FHNW/Semester_8/Time Series Analysis with R/R_Files/Summary/Materials L1/female_names.csv")
+
+View(fnames)
+fnames1 <- read.csv("~/Michele_FHNW/Semester_8/Time Series Analysis with R/R_Files/Summary/Materials L1/female_names.csv")
+fnames2 <- fread("~/Michele_FHNW/Semester_8/Time Series Analysis with R/R_Files/Summary/Materials L1/female_names.csv")
+
+```
+
+#### Exercise 1.1 – Task 4: Work with Data Types
+
+What is the data type of each of the following objects. If you don’t know, check the type using *typeof()*.
+
+-   1
+
+-   5L
+
+-   sqrt(-1 +0i)
+
+-   "25”
+
+```{r}
+typeof(1)  # double
+typeof(5L) # integer
+typeof(sqrt(-1+0i)) #complex
+typeof("25") # character
+```
+
+Which of these coercions work? What do they produce?
+
+-   as.numeric(FALSE)
+
+-   as.logical("Hello!")
+
+-   as.integer(4.4)
+
+-   as.character(TRUE)
+
+-   as.numeric("scooby snacks")
+
+```{r}
+as.numeric(FALSE) # 0
+as.logical("Hello!") # NA
+as.integer(4.4) # 4
+as.character(TRUE) # "TRUE"
+as.numeric("scooby snacks") # NA
+```
+
+What is the output of each of these lines of code? Why?
+
+-   sqrt(-1)
+
+-   "1" + "5"
+
+-   1 + 7
+
+-   TRUE + FALSE
+
+```{r}
+sqrt(-1) # NaN (Not a Number -> is a complex number, to make it clear sqrt(-1+0i))
+"1" + "5" # Error: strings cannot be conncatenated with +
+1 + 7 # 8
+TRUE + FALSE # 1, cz logic can be coerced (gezwungen) to numeric
+```
+
+#### Exercise 1.1 – Task 5: Work with Data Structures
+
+Create a vector of integers of length 20 and store it in the variable v.
+
+```{r}
+v <- 1:20
+v
+```
+
+Use your vector v to create a matrix of integers with dimensions 4x5 and store it in the variable m.
+
+```{r}
+m <- matrix(v,nrow = 4)
+m
+```
+
+Coerce your matrix m into a data frame and store the result in the variable df.
+
+```{r}
+df <- as.data.frame(m)
+df
+```
+
+Create a list called my_list with the following 4 elements:
+
+-   "I love summer"
+
+-   TRUE
+
+-   "fun temperatures"
+
+-   c(24,25,26)
+
+```{r}
+my_list <- list("I love summer", TRUE, "fun temperatures", c(24,25,26))
+my_list
+```
+
+Create a data frame with the following columns (vectors) and save it in the variable my_df:
+
+-   Your name and the name of your 2 best friends.
+
+-   Your age and your 2 best friends’ ages.
+
+-   Whether you and each of your 2 friends own a car or not (as Boolean values).
+
+```{r}
+names <- c("Michele", "Pelin", "Selina")
+ages <- c(28,29,28)
+cars <- c(TRUE, TRUE, TRUE)
+
+my_df <- data.frame(names, ages, cars)
+my_df
+
+# or
+
+my_df1 <- data.frame(names = c("Michele", "Noe", "Pariya"),
+                    ages = c(28, 22, 26),
+                    car_owner = c(TRUE, FALSE, TRUE))
+my_df1
+
+```
+
+Save your data frame my_df to your disk
+
+-   as a csv file,
+
+-   as a RDS file.
+
+Then load it again, using a different name.
+
+```{r}
+fwrite(my_df, file = "bffs.csv")
+saveRDS(my_df, file = "bffs.RDS")
+bffs1 <- fread("bffs.csv")
+bffs2 <- readRDS("bffs.RDS")
+```
+
+Save my_list and my_df as an Rdata file. Then remove both variables from your environment and load the saved RData fiel again.
+
+```{r}
+save(my_list, my_df, file = "my_stuff.Rdata")
+rm(my_list) # rm() removes objects from the environment.
+rm(my_df)
+load("my_stuff.Rdata")
+```
+
+Notice: Since more than one object is stored in my_stuff.Rdata, I did not assign the output to a variable (like I did with readRDS above).
+
+Instead, the objects are automatically loaded under the original variable names. (Check the environment pane: my_list and my_df are there again.)
+
+This can accidentally overwrite an object name that is already in your envirinment - especially, when you don't know or don't remember what is inside the Rdata file.
+
+Thus, it is always safer to use saveRDS(), saving all objects separately.
+
+You can check what happens if you assign the output of load() to a varible:
+
+```{r}
+my_stuff <- load("my_stuff.Rdata")
+typeof(my_stuff)
+```
+
+The names of the included objects are stored in a character vector, but the objects themselves are not loaded.
+
+### Self-Study 1.1. The Basics
+
+Which one is larger: sin(10) or cos(10)? Write an expression to solve this.
+
+```{r}
+sin(10) # -0.55 <- larger
+cos(10) # -084
+sin(10) > cos(10) # TRUE
+```
+
+Do the following:
+
+-   Create a variable \`puppies\` equal to the number of puppies you'd like to have
+
+-   Create a variable \`puppy_price\`, which is how much you think a puppy costs
+
+-   Create a variable \`total_cost\` that has the total cost of all of your puppies
+
+-   Create a boolean variable \`too_expensive\`, set to TRUE if the cost is greater than \$1,000
+
+-   Create a variable \`max_puppies\`, which is the number of puppies you can afford for \$1,000
+
+```{r}
+puppies <- 3
+puppy_price <- 450
+total_cost <- puppies * puppy_price
+total_cost
+too_expensive <- total_cost > 1000
+too_expensive
+max_puppies <- as.integer(1000 / puppy_price)
+max_puppies
+```
+
+What is the data type of each of the following objects:
+
+-   c(1, 2, 3)
+
+-   c('d', 'e', 'f')
+
+-   c("d", "e", "f")
+
+-   c(TRUE,1L,10)
+
+-   c("11",10,12)
+
+-   c("Sun","night", FALSE)
+
+--\> They are all vector objects with elements/values, the type of these elemensts inside the vector can be checked with the typeof() function.
+
+```{r}
+typeof(c(1, 2, 3))
+typeof(c('d', 'e', 'f'))
+typeof(c("d", "e", "f"))
+typeof(c(TRUE,1L,10))
+typeof(c("11",10,12))
+typeof(c("Sun","night", FALSE))
+```
+
+To answer the following questions, use your preferred search engine and/or the inbuilt help:
+
+1.  Find out what the abs() function does using the inbuilt help. How much is abs(10)?
+
+2.  What is the square root of 11? Is there a function for this in R?
+
+3.  How do you round numbers to the nearest integer in R? Is there a function? Round 3.5 to the nearest integer.
+
+4.  Create a vector that ranges from 10 to 50 in steps of 3.
+
+    ```{r}
+    ?abs() # abs(x) computes the absolute value of x
+    abs(10) # 10
+    abs(-10) # 10
+    sqrt(11) # 3.32
+    round(3.5)
+    round(sqrt(11), digits=2) # round to a specific number of decimal places
+    seq(from = 10, to = 50, by = 3)
+    seq(10, 50, by = 3)
+    ```
+
+5.  Install the package "RXKCD”. What can you do with this package?
+
+    The getXKCD() functions give back an image see @fig-fav-comic-strip
+
+    ```{r}
+    #| label: fig-fav-comic-strip
+    #| fig-cap: Image of favorite XKCD comic strip
+
+    # install.packages("RXKCD") # already installed
+    library("RXKCD")
+    ?RXKCD
+    ??RXKCD # Visualize your favorite XKCD comic strip directly from R. XKCD
+    getXKCD(which = "current", display = TRUE, html = FALSE, saveImg = FALSE)
+    ```
+
+## 1.2 Data Viz with ggplot2 and plotly
+
+### Exercise 1.2. Data Viz with ggplot2 and plotly
+
+#### Exercise 1.2 – Task 1: Create a basic Scatterplot
+
+Install and load the libraries "tidyverse", "ggplot2", "plotly” and “palmerpenguins”.
+
+View the data using View(penguins).
+
+Read the help page of the penguins dataset using help(penguins). It contains a data dictionary explaining attribute semantics.
+
+Type glimpse(penguins) and summary(penguins) and inspect the output.
+
+-   glimpse() shows you all the attributes, their data types and some example values. glimpse() is part of the dyplyr package, which in turn is part of the tidyverse collection of packages.
+
+-   summary() is a generic function. Applied to a data set, it shows you summary statistics of all attributes.
+
+Plot all pairs of variables against each other using ggpairs().
+
+![Desired Scatterplot](Materials%20L1/Exercise%201.2%20–%20Task%201%20Create%20a%20basic%20Scatterplot.PNG){#fig-desired-scatterplot style="float:right;" width="350"}
+
+Recreate the scatterplot on the right (see @fig-desired-scatterplot and for solution @fig-penguins-ggpairs-1 and @fig-penguins-ggpairs-2):
+
+-   Start with an empty canvas using ggplot() and specify the data set.
+
+-   Then add an aestetic mapping using mapping() and aes().
+
+-   In aes(), map flipper_length_mm to the x-axes and bill_length_mm to the y axes.
+
+-   Add a layer geom_point() to visualize the corresponding data as a scatterplot.
+
+```{r}
+#| warning: false
+
+# install.packages("tidyverse") # already installed
+# install.packages("ggplot2") # already installed
+# install.packages("plotly") # already installed
+# install.packages("palmerpenguins") # already installed
+
+# install.packages("GGally") # already isntalled # needed for the ggpairs()
+library("GGally") # needed for the ggpairs()
+
+library("tidyverse")
+library("ggplot2")
+library("plotly")
+library("palmerpenguins")
+
+View(penguins)
+
+help("penguins")
+
+glimpse(penguins)
+summary(penguins)
+```
+
+```{r}
+#| warning: false
+#| label: fig-penguins-ggpairs
+#| fig-cap: "Penguins"
+#| fig-subcap:
+#|  - "Penguins ggpairs" 
+#|  - "Penguins Scatterplot"
+#| layout-ncol: 2
+
+ggpairs(penguins) 
+
+
+ggplot(data = penguins,
+       mapping = aes(x = flipper_length_mm, 
+                     y = bill_length_mm)) + 
+  geom_point()
+```
+
+#### Exercise 1.2 – Task 2: Pimp Up your Scatterplot
+
+![Desired Scatterplot (pimed)](Materials%20L1/Exercise%201.2%20–%20Task%202%20Pimp%20Up%20your%20Scatterplot.PNG){#fig-desired-scatterplot2 style="float:right;" width="350"}
+
+Add the variable island to your plot by mapping it to the color channel.
+
+Add another layer labs() to your plot and use it to add the title "Flipper Length vs. Bill Length (in mm) by Island”. To see all arguments of the labs() function, type help(labs).
+
+Use labs() to add the subtitle "Source: Palmer Station LTER / palmerpenguins package"
+
+Use labs() to change the labels of the x and y axes to "Flipper Length (mm)" and "Bill Length (mm)", respectively.
+
+Use labs() to change the legend title to "Island".
+
+Now your plot should look like the one on the right! (see @fig-desired-scatterplot2 and for solution @fig-penguins-pimped-scatterplot)
+
+```{r}
+#| warning: false
+#| label: fig-penguins-pimped-scatterplot
+#| fig-cap: Penguins pimped Scatterplot
+
+# install.packages("tidyverse") # already installed
+# install.packages("ggplot2") # already installed
+# install.packages("plotly") # already installed
+# install.packages("palmerpenguins") # already installed
+library("tidyverse")
+library("ggplot2")
+library("plotly")
+library("palmerpenguins")
+
+ggplot(data = penguins,
+       mapping = aes(x = flipper_length_mm, 
+                     y = bill_length_mm, 
+                     color = island)) + 
+  geom_point() +
+  labs(title = "Flipper Length vs. Bill Length (in mm) by Island",
+       subtitle = "Source: Palmer Station LTER / palmerpenguins package",
+          x = "Flipper Length (mm)", y = "Bill Length (mm)",
+       color = "Island") # Set legend title for color scale 
+
+```
+
+#### Exercise 1.2 – Task 3: Add a Smoothed Trendline
+
+![Desired Scatterplot with trendline](Materials%20L1/Exercise%201.2%20–%20Task%203%20Add%20a%20Smoothed%20Trendline.PNG){#fig-scatterplot-trendline style="float:right;" width="350"}
+
+Now add a layer geom_smooth to visualize a smoothed trendline. What happens here?
+
+-   Answer: 3 trendlines get shown, as the variables island is mapped to the color scale
+
+Change your plot so that only one trendline is displayed.
+
+Make it interactive using ggplotly().
+
+-   Remark: To do that, assign your whole plot from (b) to a variable, e.g., the variable my_plot. Then call ggploty(my_plot).
+
+Now your plot should look like the one on the right! (see @fig-scatterplot-trendline and for solution @fig-penguins-scatterplot-trendline)
+
+```{r}
+#| warning: false
+#| label: fig-penguins-scatterplot-trendline
+#| fig-cap: Penguins Scatterplot with trendline
+
+# install.packages("tidyverse") # already installed
+# install.packages("ggplot2") # already installed
+# install.packages("plotly") # already installed
+# install.packages("palmerpenguins") # already installed
+library("tidyverse")
+library("ggplot2")
+library("plotly")
+library("palmerpenguins")
+
+my_plot <- ggplot(data = penguins,
+                  mapping = aes(x = flipper_length_mm, 
+                                y = bill_length_mm)) + 
+  geom_point(mapping = aes(color = island)) + # mapping for the color scale to the "point", so only one trendline appears
+  geom_smooth() +
+  labs(title = "Flipper Length vs. Bill Length (in mm) by Island",
+       subtitle = "Source: Palmer Station LTER / palmerpenguins package",
+       x = "Flipper Length (mm)", y = "Bill Length (mm)",
+       color = "Island") # Set legend title for color scale
+
+ggplotly(my_plot)
+
+```
+
+#### Exercise 1.2 – Task 4: Create a Stacked Bar Plot
+
+![Desired Output](Materials%20L1/Exercise%201.2%20–%20Task%204%20Create%20a%20Stacked%20Bar%20Plot.PNG){#fig-desired-output-canvas style="float:right;" width="350"}
+
+Create a new canvas for penguins.
+
+Create a bar plot of the variable species using geom_bar.
+
+Use facet_wrap() to create a sequence of facets along the variable island.
+
+In facet_wrap(), add the argument ncol=1. (See help(facet_wrap) for more arguments!)
+
+In aes(), add the position argument fill = sex. This gives you stacked bar plots according tp sex.
+
+-   Remark: A position adjustment for a geometry (like geom_bar here) specifies a “rule” as to how different components should be positioned relative to each other to make sure they don’t overlap. This position adjustment is inherent in geom_bar, and we can make it visible by mapping a different variable to the color encoding (using the fill aesthetic here).
+
+Now your plot should look like the one on the right! (see @fig-desired-output-canvas and for solution @fig-penguins-barchart)
+
+```{r}
+#| label: fig-penguins-barchart
+#| fig-cap: Penguins Barchart per islands
+ggplot(data=penguins) + 
+  geom_bar(mapping = aes(x=species, fill=sex)) +
+  facet_wrap(facets=~island,
+             ncol=1)
+```
+
+### Self-Study 1.2. Data Viz with ggplot2 and plotly
+
+#### Self Study 1.2 – Task 1: Business Understanding
+
+1.  Install and load the libraries "tidyverse", "ggplot2", "plotly”, "skimr” and “Ggally”
+
+2.  The data set mpg is included in the ggplot2 package. Read the help page of the dataset using help(mpg). It contains a data dictionary.
+
+3.  Try to understand what the attribute names mean.
+
+4.  View the data using View(mpg).
+
+```{r}
+# install.packages("tidyverse") # already installed
+# install.packages("ggplot2") # already installed
+# install.packages("plotly") # already installed
+# install.packages("skimr") # already installed
+# install.packages("GGally") # already installed
+
+library("tidyverse")
+library("ggplot2")
+library("plotly")
+library("skimr")
+library("GGally")
+
+help(mpg)
+
+View(mpg)
+```
+
+#### Self Study 1.2 – Task 2: Data Understanding based on Summary Statistics
+
+Use the functions class(), typeof(), attributes() and dim() to check the class, data type, attributes and dimensions of the mpg dataset. Notice that mpg is loaded as a table (tbl) - a special kind of data frame (see later).
+
+Get a first impression of the structure of the data by calling glimpse(mpg) and summary(mpg)
+
+Now try the skim() function from the skimr library to get a better overview over the dataset. Look into the help page of skim(). (see @fig-mpg-skim for the output)
+
+Now answer the following questions:
+
+-   Data of how many cars are stored in the data set?
+
+    *Solution: 234 (number of rows)*
+
+-   How many car attributes have been recorded in the mpg data set?
+
+    *Solution: 11 (number of columns)*
+
+-   How many of them are numerical, how many categorical?
+
+    *Solution: 5 numeric (numerical) and 6 character (categorical)*
+
+-   Has the attribute type of drive train been recorded for all cars in this data set, or are there any missing values for this attribute?
+
+    *Solution: there are 0 missing values*
+
+-   How many car models does this data set contain?
+
+    *Solution: there are 38 car models (n_unique)*
+
+-   How many manufacturers?
+
+    *Solution: there are 15 manufacturers (n_unique)*
+
+```{r}
+
+class(mpg)
+typeof(mpg)
+attributes(mpg) # gives: class, row.names, names(headers)
+dim(mpg) # dimension: rows x columns
+
+glimpse(mpg) 
+summary(mpg)
+
+skim(mpg)
+```
+
+-   What is the minimum number of cylinders that occur in a car of this data set?
+
+    *Solution: 4 (in skim the min appears under "p0" - the zero percentile)*
+
+-   What is the range of highway miles per gallon of the cars in this data set? (range = max-min)
+
+    *Solution: 12 - 44 = 32 (p0 - p100)*
+
+-   What is the mean and standard deviation of highway miles per gallon of the cars in this data set?
+
+    *Solution: mean= 23.44, sd =5.95*
+
+-   In the character variables section, what do you think do the column names min, max and empty stand for?
+
+    -   Hint: Execute unique(mpg\$manufacturer). Does it give you an idea?
+
+    *Solution: **min = 4** is the minimum number of characters of any manufacturer (audi, ford, jeep), **max = 10** is the maximum number of characters of any manufacturer (volkswagen, land rover), **empty = 0** says that no character strings are empty*
+
+-   Is the variable cty normally distributed? Is it skewed? (Read this off the output of skim.)
+
+    *Solution: Skewness is a measure of the asymmetry of the probability distribution about its mean. The little picture displayed by skim() suggests that cty is right skewed, since it shows a long tail on the right. Yet, the mean is a bit left of the median (p50). So it is not clear from the data we see here*.
+
+-   Now plot the histogram of cty to double check the sample distribution. Do you think it makes sense to check for outliers?
+
+    *Solution: We see also here no clear picture: The mass of the distribution may actually be equally distributed about the mean of 16.9. The little picture may have given a wrong impression because of the 2 outliers on the right. As a next step, we could remove the outliers and then check the distribution again. But first lets check if these are indeed outliers or not... (We will learn in a later lecture how to remove them, if necessary.)*
+
+-   Create a boxplot of the variable cty. Make your boxplot interactive using ggplotly(). How many outliers do you see (according to the interquartile range (IQR) criterion)?
+
+    -   Hint: In the boxplot, outliers according to the IQR criterion are all points outside of the whiskers. (see @fig-iqr-criterion)
+
+        ![The IQR criterion.](Materials%20L1/IQR%20criterion.PNG){#fig-iqr-criterion width="450"}
+
+    *Solution: There are 4 outliers visible in the boxplot: The two we recognized in the histogram (33 and 35: double check wit the histogram), and 2 more (28 and 29).*
+
+-   You can check if you are right using the function boxplot.stats(): Executing boxplot.stats(mpg\$cty)\$out will give you all outliers. Does it fit? (Remember that the \$ sign lets you access the single attributes of a data frame.)
+
+    *Solution: No, it doesnt fit full: We have actually 5 outliers, because 28 appears twice. We couldn't see that in the boxplot, since they are drawn on top of each other.*
+
+```{r}
+#| label: fig-mpg-skim
+#| fig-cap: MPG data
+#| fig-subcap:
+#|   - "histogram of cty "
+#|   - "outliers" 
+#| layout-ncol: 1
+
+unique(mpg$manufacturer)
+
+my_hist_cty <- ggplot(data = mpg) +
+  geom_histogram(mapping = aes(x=cty))
+ggplotly(my_hist_cty)
+
+my_boxplot_cty <- ggplot(data = mpg) +
+  geom_boxplot(mapping = aes(y=cty))
+ggplotly(my_boxplot_cty)
+
+boxplot.stats(mpg$cty)$out
+```
+
+#### Self Study 1.2 – Task 3: Data Understanding by Visual EDA
+
+Now let’s do a bit of Exploratory Data Analysis (EDA) using ggplot!
+
+I assume that the number of highway miles a car can go per gallon may depend functionally on the engine displacement of the car (e.g., linearly, quadratically,…). Do you think our sample data will support my hypothesis? Check by visual inspection.
+
+-   Hint: For the visual inspection, make a scatterplot of hwy against displ.
+
+-   Remark: To really check the hypothesis, we would need to do more: We could do a statistical hypothesis test, or we could model a functional relationship (as part of the modelling phase of the data science lifecycle) and evaluate the modelling results. The step of visual inspection is a way of scouting if its worth the effort, and to give us ideas. :)
+
+*Solution: It looks as if the hypothesis is correct. There is a clear pattern discernible.*
+
+```{r}
+ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy)) +
+  geom_point()
+```
+
+Add the variable year to your plot using color as a third dimension. What is going on with the legend here?
+
+Solution: The legend shows a continuous scale, even though we actually only have 2 values of the year variable (1999 and 2008 - check with unique(mpg\$year)). The reason is that year has been imported as a numeric data type (check with skim(mpg) or str(mpg)), and this implies a continuous color scale.
+
+```{r}
+ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy,
+                     color=year)) +
+  geom_point()
+
+unique(mpg$year)
+
+skim(mpg)
+str(mpg)
+```
+
+Make the numerical variable year categorical by applying the function as.character(). Then redo your plot from (b).
+
+-   Hint: To do that, follow these steps:
+
+    -   Before you modify the original dataset mpg, store a copy using a new name, e.g. do my_mpg \<- mpg.
+
+    -   Remember from Task 1 that mpg (and now also my_mpg) is a data frame. You can address a single attribute in a data frame using the \$ sign.
+
+    -   This means you can address the attribute year by typing my_mpg\$year.
+
+    -   Now apply the function as.character() to year to change its data type. Overwrite the original variable year in my_mpg with the transformed one.
+
+```{r}
+ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy,
+                     color=as.character(year))) +
+  geom_point()
+
+# or
+
+my_mpg <- mpg
+my_mpg$year <- as.character(my_mpg$year)
+
+ggplot(data = my_mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy,
+                     color = year)) +
+  geom_point() 
+```
+
+Overlay the scatterplot of my_mpg with a smoothed trendline using geom_smooth. Make sure that only \*one\* trendline is diplayed.
+
+Make your plot interactive using ggplotly().
+
+```{r}
+my_mpg <- mpg
+my_mpg$year <- as.character(my_mpg$year)
+
+ggplot(data = my_mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy)) +
+  geom_point(mapping = aes(color = year)) + 
+  geom_smooth()
+
+ggplotly(my_mpg)
+```
+
+Now create facets of this plot along the discrete variable year, but don't make it interactive for now.
+
+-   Remark: Notice that year is used twice here. Though color-coding year is not necessary here, it still helps to stress this variable.
+
+    Now create facets of this plot along the discrete variable drv (instead of year).
+
+    Next create facets of this plot along the discrete variable manufacturer (instead of drv).
+
+    What can you read out of these facet plots? Do some of them catch your eye?
+
+*Solution:*
+
+*1) jeep, mercury and nissan look weird: the grey band around the trendline is very broad. It is the 95%-confidence interval around the trendline: a true observation will lie within this band around the trendline prediction with a probability of 95%. It thus means that there is a lot of uncertainty involved in producing the trendline. (We don't know why yet, but we will come back to that later.)*
+
+*2) lincols, pontiac and subaru look weird as well: its not clear why no trendline is shown at all. (We will come back to this as well!)*
+
+*3) volkswagen is also bit weird. It makes an unmotivated dip at approximately x=2 that does not seem to correspond to any of the data points shown. (We will see the reason later.)*
+
+```{r}
+#| warning: false
+
+my_mpg <- mpg
+my_mpg$year <- as.character(my_mpg$year)
+
+my_plot <- ggplot(data = my_mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy)) +
+  geom_point(mapping = aes(color = year)) + 
+  geom_smooth()
+
+my_plot + facet_wrap(~ year)
+
+my_plot + facet_wrap(~ drv)
+
+my_plot + facet_wrap(~ manufacturer)
+```
+
+Drop the manufacturer facets again. Instead create a grid of facets along the discrete variables drv and class.
+
+```{r}
+#| warning: false
+
+my_mpg <- mpg
+my_mpg$year <- as.character(my_mpg$year)
+
+my_plot <- ggplot(data = my_mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy)) +
+  geom_point(mapping = aes(color = year)) + 
+  geom_smooth()
+
+my_plot + facet_grid(drv ~ class)
+```
+
+Create a boxplot now that visualizes statistics about the the highway miles per gallon of the cars in my_mpg.
+
+```{r}
+
+my_mpg <- mpg
+
+ggplot(data = my_mpg, 
+       mapping = aes(y = hwy)) +
+  geom_boxplot() 
+```
+
+Now make one such boxplot per year (1999 and 2008). Make it interactive. What can you read out of it?
+
+*Solution: While the median didnt change much, the cars in 2008 show more variability in terms of highway miles per gallon.*
+
+```{r}
+#| warning: false
+
+my_mpg <- mpg
+
+my_plot <- ggplot(data = my_mpg, 
+       mapping = aes(x = year, 
+                     y = hwy)) +
+  geom_boxplot(mapping = aes(color = year)) 
+
+ggplotly(my_plot)
+```
+
+Now create facets of this plot along the variable drv. What new insight(s) does it give you?
+
+Solution: Most cars with a front-wheel drive are more efficient than 4wds and rwds: they go farther per gallon of gas - independently of the year of manufacture. Not surprisingly, most 4-wheel drive cars are more expensive in terms of gas needed per mile than front- or rear wheel drive cars. Additionally, they show the biggest change from 1999 to 2008 in terms of variability (inter-quartiule range and whiskers).
+
+```{r}
+#| warning: false
+
+my_plot_fac <- my_plot + facet_wrap(~ drv)
+
+ggplotly(my_plot_fac)
+```
+
+Finally let’s take a look at ggpairs: Try to create a pairwise variable plot of mpg using ggpairs().
+
+```{r}
+ggpairs(mpg)
+```
+
+We get an error message here! It says that the categorical variable model has more than 15 levels (i.e. more than 15 different values), ggpairs() cannot display more. Check if this is true by typing length(unique(mpg\$model)).
+
+-   Remark: This is what happens here:
+
+    -   mpg\$model addresses only the variable column of the data frame.
+
+    -   Remember that every column of a data frame is a vector. We can apply the function unique() to see its unique values.
+
+    -   The output is again a vector, namely the vector of unique values. (You can check with is.vector().)
+
+    -   Since unique(mpg\$model) is again a vector, we can apply the function length() to count the number of entries.
+
+```{r}
+length(unique(mpg$model))
+
+is.vector(unique(mpg$model))
+```
+
+The advice in the error message is to exclude the variable model. So let's do that. You can do that by typing ggpairs(mpg\[,-c(2)\]). Remark: Don't worry, we will learn how this works a bit later in the lecture about data frames.
+
+```{r}
+#| warning: false
+
+ggpairs(mpg[,-c(2)]) 
+```
+
+You can now sit down, get a tea and take some time to contemplate this plot for a bit. Trying to make sense of the different subplots, if you can. Don't get frustrated if you cannot figure everything out: there is a lot of information in this plot!
+
+-   Remark: The logic is the following:
+
+    -   In the diagonal, there is only one variable to display (e.g. manufacturer). Since it does not make sense to plot manufacturer vs manufacturer, a plot type is chosen that is suitable for displaying only one variable. If the variable is categorical (like manufacturer ), this is a frequency diagram (bar plot). If the variable is numerical (like hwy), it is a density plot.
+
+    -   In the rest right of the matrix, plot types are chosen that are suitable to visualize categorial vs categorical, numerical vs numerical or categorical vs numerical variables. Since the upper right triangle and the lower left triangle are redundant, different plot types are chosen to capture as much info as possible.
+
+    -   If you are interested, you can get more info about ggpairs, e.g., here: https://r-charts.com/correlation/ggpairs/ and https://www.rdocumentation.org/packages/GGally/versions/2.2.1
