@@ -30,7 +30,7 @@ A large car fleet company asks us to help them forecast vehicle resale values. T
 
 For the case described in Exercise 5.1, describe the five steps of forecasting in the context of this project.
 
-## 5.2 Time Series in R 
+## 5.2 Time Series in R
 
 50
 
