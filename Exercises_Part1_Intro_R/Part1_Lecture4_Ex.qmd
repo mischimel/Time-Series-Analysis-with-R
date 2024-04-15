@@ -757,7 +757,7 @@ haas_avocado_sales <- avocados$small_haas + avocados$large_haas + avocados$xlarg
 sum(avocados$Total.Volume - haas_avocado_sales  > 0)
 ```
 
-##### ???e) Create a new column other_avos that is the Total.Volume minus all haas avocados (small, large, xlarge).
+##### ?????e) Create a new column other_avos that is the Total.Volume minus all haas avocados (small, large, xlarge).
 
 --\> soblad Berechnung bekannt ist kann man es untern in mutate() anpassen!
 
@@ -865,7 +865,7 @@ average_sales <- by_size_tidy %>%
 print(average_sales)
 ```
 
-##### ??????k) We can also investigate sales by avocado type (conventional, organic).
+##### ?????k) We can also investigate sales by avocado type (conventional, organic).
 
 --\> ohne .groups = 'drop' habe ich einen fehler
 
