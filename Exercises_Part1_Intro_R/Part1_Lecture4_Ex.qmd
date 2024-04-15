@@ -693,9 +693,23 @@ ggplotly(p_tidy_cars2)
 
 a\) Load the packages tidyr, dplyr, and ggplot2. Download the avocado.csv file from GitHub and load it into a variable avocados. Get a first impression of the data using View() and str().
 
+```{r}
+avocados <- read.csv("avocado.csv")
+
+str(avocados)
+View(avocados) 
+```
+
 b\) From str(), you can see that the Date column is of type char. To tell R to treat the Date column as a date and not as a string, transform that column using the as.Date() function.
 
 -   Hint: You can use mutate().
+
+```{r}
+avocados <- avocados %>% 
+  mutate(Date = as.Date(Date))
+
+str(avocados)
+```
 
 c\) The file has some uninformative column names. Rename these columns:
 
@@ -707,29 +721,105 @@ c\) The file has some uninformative column names. Rename these columns:
 
 These are the sales volumes of haas avocados.
 
-d\) The data only holds total sales volumes (Total.Volume) and the sales volumes for haas avocados (small_haas, large_haas, xlarge_haas), but there are also other avocados included in Total.Volume. Double-check this by summing up haas avocado sales and comparing the sum with the total sales value.
+```{r}
+avocados <- avocados %>% 
+  rename(small_haas = X4046, 
+         large_haas = X4225, 
+         xlarge_haas = X4770)
 
-e\) Create a new column other_avos that is the Total.Volume minus all haas avocados (small, large, xlarge).
+str(avocados)
+```
+
+##### ?????d) The data only holds total sales volumes (Total.Volume) and the sales volumes for haas avocados (small_haas, large_haas, xlarge_haas), but there are also other avocados included in Total.Volume. Double-check this by summing up haas avocado sales and comparing the sum with the total sales value.
+
+--\> Berechnung ist komisch
+
+```{r}
+sum(avocados$Total.Volume - avocados$small_haas + avocados$large_haas + avocados$xlarge_haas > 0) # 18249 - This is the number of records in  of the data set. It means that on all days the Total Sales Volume is bigger than the Sales Volume of haas avocados.
+```
+
+```{r}
+sum(avocados$Total.Volume - avocados$small_haas - avocados$large_haas - avocados$xlarge_haas > 0) 
+```
+
+```{r}
+x = 10 - 5 + 3 + 1
+x
+y = 10 - (5 + 3 + 1)
+y
+z = 10 - 5 - 3 - 1 
+z
+```
+
+```{r}
+haas_avocado_sales <- avocados$small_haas + avocados$large_haas + avocados$xlarge_haas
+
+sum(avocados$Total.Volume - haas_avocado_sales  > 0)
+```
+
+##### ???e) Create a new column other_avos that is the Total.Volume minus all haas avocados (small, large, xlarge).
+
+--\> soblad Berechnung bekannt ist kann man es untern in mutate() anpassen!
+
+```{r}
+avocados <- avocados %>% 
+  mutate(other_avos = Total.Volume - small_haas - large_haas - xlarge_haas)
+```
 
 f\) To perform analysis by avocado size, create a dataframe by_size that has only Date, other_avos, small_haas, large_haas, xlarge_haas.
 
 -   Note: other_avos is not strictly a size, but we ignore this. We may view it as the bin that holds the sales volumes of avocados of size “unknown”.
 
+```{r}
+by_size <- avocados %>% 
+  select(Date, 
+         other_avos, 
+         small_haas, 
+         large_haas, 
+         xlarge_haas)
+```
+
 g\) Use head() to view the first few lines of your dataframe by_size.
 
 -   Is it tidy or messy?
 
+    *messy*
+
 -   What is the observed event?
+
+    *At a certain date, a number of avocados of a certain size are sold.*
 
 -   What are the recorded aspects?
 
+    *(1) date, (2) size, (3) number sold.*
+
 -   How would a tidy version of the data look?
+
+    *(1) keep 'date' column.*
+
+    *(2) create a 'size' column that holds the column names `other_avos`, `small_haas`, `large_haas`, `xlarge_haas` as values.*
+
+    *(3) create a 'volume' column that holds the sales volumes.*
+
+```{r}
+head(by_size) 
+```
 
 h\) Tidy it up using pivot_longer(). Store the result in a new data frame by_size_tidy. Hints:
 
 -   The four column names other_avos, small_haas, large_haas, xlarge_haas go into a new column called size.
 
 -   The volumes of sales (currently stored in each of the above columns) go to a new column called volume.
+
+```{r}
+by_size_tidy <- by_size %>% 
+  pivot_longer(cols = -Date,
+               names_to = "size",
+               values_to = "volume"
+               )
+
+head(by_size_tidy) 
+```
 
 i\) The shape of by_size_tidy is not only tidier, but it also facilitates the visualization of sales over time by size: Use ggplot2 with geom_smooth() to plot a smoothed trendline of sales volumes over time – make one trendline for each size. Hints:
 
@@ -741,11 +831,43 @@ Bonus:
 
 -   To see the advantage of this shape for plotting sales over time by size, try to produce the same plot using the data frame by_size instead of the data frame by_size_tidy.
 
+```{r}
+ggplot(by_size_tidy) +
+  geom_smooth(mapping = aes(x = Date,
+                           y = volume,
+                           col = size),
+              se = F) # Don't display the confidence intervals around the smoothed conditional means
+```
+
+```{r}
+by_size %>% ggplot() +
+  geom_smooth(mapping = aes(x = Date,
+                            y = small_haas, color = "Small Haas"), se = F) +    # specify you own label for 'color' inside aes(), e.g., color = "Small Haas". You can use whatever label you wish to appear in the legend (see below)
+  geom_smooth(mapping = aes(x = Date,
+                            y = large_haas, color = "Large Haas"), se = F) +
+  geom_smooth(mapping = aes(x = Date,
+                            y = xlarge_haas, color = "Xlarge Haas"), se = F) +
+  geom_smooth(mapping = aes(x = Date,
+                            y = other_avos, color = "Other"), se = F) +
+  labs(x = "Date", y = "volume") + # Specify the title for the axes
+  scale_color_manual(name = "", values = c("Small Haas" = "red", "Large Haas" = "blue", "Xlarge Haas" = "green", "Other" = "yellow")) # the labels must match what you specified above
+```
+
 j\) Now use by_size_tidy to compute the average sales volume per size.
 
 -   Hint: First group by size using group_by(), then compute the average using summarize().
 
-k\) We can also investigate sales by avocado type (conventional, organic).
+```{r}
+average_sales <- by_size_tidy %>% 
+  group_by(size) %>% 
+  summarize(avg_volume = mean(volume))
+
+print(average_sales)
+```
+
+##### ??????k) We can also investigate sales by avocado type (conventional, organic).
+
+--\> ohne .groups = 'drop' habe ich einen fehler
 
 -   To do this, consider again the original avocados data frame.
 
@@ -755,9 +877,23 @@ k\) We can also investigate sales by avocado type (conventional, organic).
 
 -   Store the result in a new data frame called by_type.
 
+```{r}
+by_type <- avocados %>% 
+  group_by(Date, type) %>% 
+  summarise(volume = sum(Total.Volume), .groups = 'drop')
+```
+
 l\) This data set is already tidy. Visualize the avocado sales over time by type using geom_smooth().
 
 -   Note: This is completely analogous to the plot you did before!
+
+```{r}
+ggplot(by_type) +
+  geom_smooth(mapping = aes(x = Date,
+                            y = volume,
+                            col = type),
+              se = F)
+```
 
 m\) From the above plot we see that the sales volumes of both avocado types seem to increase over the years. Now let’s see if we can (visually) confirm this correlation in a scatterplot: if our assumption is correct, we should see a linear correlation between conventional and organic sales. Create this scatterplot using ggplot2. Hints:
 
@@ -770,3 +906,15 @@ m\) From the above plot we see that the sales volumes of both avocado types seem
 -   To achieve this, reformat the data frame by_type using pivot_wider(). Store the result in a new data frame called by_type_wide.
 
 -   Now use ggplot2 with geom_point() to generate the scatterplot. Does it confirm our assumption?
+
+```{r}
+by_type_wide <- by_type %>% 
+  pivot_wider(names_from = type, 
+              values_from = volume)
+
+ggplot(by_type_wide) +
+  geom_point(mapping = aes(x = conventional, 
+                           y = organic)) 
+```
+
+*As expected, the scatter plot shows some linear correlation between the sales numbers, but it is not too strong. This was expected as well: We could already see in the temporal plot that conventional sales vary much stronger than organic sales, which is reflected in the relatively wide spread of points.*
