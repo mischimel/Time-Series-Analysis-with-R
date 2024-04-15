@@ -483,6 +483,20 @@ a\) Copy / paste it in your R-script, view it and answer the following questions
 
 -   If messy, describe in words how a tidy version of the data would look.
 
+*What is the observed event? - A person has a weight in a specific month. Example: Ann weighs 102 pounds in January. (Note: Probably it's always measured on the same day of each month!)*
+
+*What are the recorded aspects of the event? - (1) Name, (2) Month, (3) Weight*
+
+*Is this data set tidy or messy? - messy*
+
+*If messy, how would a tidy version of the data look?*
+
+*(1) Keep name as a column*
+
+*(2) Create a column month. Its values are the current column names of columns 2-5.*
+
+*(3) Create a column weight. Its values are the current values of these current columns.*
+
 b\) Tidy up the data set using pivot_longer(). Store the result in a new data frame called wts_tidy.
 
 c\) Use geom_line() to plot the time series of weights per person. Hints:
