@@ -32,8 +32,86 @@ For the case described in Exercise 5.1, describe the five steps of forecasting i
 
 ## 5.2 Time Series in R
 
-50
+### Exercise 5.2. Time Series in R
+
+#### Exercise 5.2: Exploring tsibble Objects 
+
+1\. Explore the following 3 time series. (The data sets are all contained in the package tsibbledata.)
+
+-   Bricks from aus_production
+
+-   Lynx from pelt
+
+-   Close from gafa_stock. () Use ? or help() to find out about the data in each series.
+
+-   What is the time interval of each series?
+
+-   Use autoplot() to produce a time plot of each series.
+
+-   For the last plot, modify the axis labels and title.
+
+2\. Use filter() to find what days corresponded to the peak closing price for each of the four stocks in gafa_stock from package tsibbledata.
+
+### Self-Study 5.2. Time Series in R
+
+#### Self-Study 5.2: Creating tsibble Objects 
+
+1\. The USgas package contains data on the demand for natural gas in the US.
+
+-   Install the USgas package.
+
+-   Create a tsibble from us_total with year as the index and state as the key.
+
+-   Plot the annual natural gas consumption by state for the New England area (comprising the states of Maine, Vermont, New Hampshire, Massachusetts, Connecticut and Rhode Island).
+
+2\. Download tourism.xlsx from GitHub and read it into R using readxl::read_excel().
+
+-   Create a tsibble which is identical to the tourism tsibble from the tsibble package.
+
+-   Find what combination of Region and Purpose had the maximum number of overnight trips on average.
+
+-   Create a new tsibble which combines the Purposes and Regions, and just has total trips by State.
 
 ## 5.3 Visualizing Time Series
 
-93
+### Exercise 5.3. Visualizing Time Series
+
+#### Exercise 5.3: Time Plots, Seasonal Plots and ACF Plots 
+
+1\. The aus_arrivals data set comprises quarterly international arrivals to Australia from Japan, New Zealand, UK and the US.
+
+-   Use autoplot(), gg_season() and gg_subseries() to compare the differences between the arrivals from these four countries.
+
+-   Can you identify any unusual observations?
+
+2\. The following time plots and ACF plots correspond to four different time series. Your task is to match each time plot in the first row with one of the ACF plots in the second row.
+
+![](Materials L5/Ex 5.3.PNG)
+
+## Self-Study 5.3. Visualizing Time Series
+
+#### Self-Study 5.3: Time Plots and White Noise 
+
+1\. Download the file tute1.csv from GitHub, open it in Excel (or some other spreadsheet application), and review its contents. You will find four columns of information. Columns B through D each contain a quarterly series, labelled Sales, AdBudget and GDP. Sales contains the quarterly sales for a small company over the period 1981-2005. AdBudget is the advertising budget and GDP is the gross domestic product. All series have been adjusted for inflation.
+
+-   Read the data into R and store it in the variable tute1.
+
+-   View the data set and convert it to time series.
+
+-   Construct time plots of each of the three series.
+
+    -   Hint: Consider using pivot_longer() and facet_grid().
+
+2\. The aus_livestock data contains the monthly total number of pigs slaughtered in Victoria, Australia, from Jul 1972 to Dec 2018.
+
+-   Use filter() to extract pig slaughters in Victoria between 1990 and 1995.
+
+    -   Hint: Use the dplyr function between() to access the years between 1990 and 1995.
+
+    -   Hint: The column Month is a time object of class yearmonth. You can access the year in a yearmonth object x by year(x).
+
+-   Use autoplot() and ACF() for this data.
+
+-   How do they differ from white noise?
+
+-   If a longer period of data is used, what difference does it make to the ACF?
