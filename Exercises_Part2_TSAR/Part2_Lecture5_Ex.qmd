@@ -22,7 +22,19 @@ Read the following case. List the possible predictor variables that might be use
 
 Case: Car Fleet Company
 
-A large car fleet company asks us to help them forecast vehicle resale values. They purchase new vehicles, lease them out for three years, and then sell them. Better forecasts of vehicle sales values would mean better control of profits; understanding what affects resale values may allow leasing and sales policies to be developed in order to maximise profits. The resale values are being forecast by a group of specialists. Unfortunately, they see any statistical model as a threat to their jobs, and are uncooperative in providing information. Nevertheless, the company provides a large amount of data on previous vehicles and their eventual resale values.
+A large car fleet company asks us to help them forecast vehicle resale values. They purchase new vehicles, lease them out for three years, and then sell them. Better forecasts of vehicle sales values would mean better control of profits; understanding what affects resale values may allow leasing and sales policies to be developed in order to maximize profits. The resale values are being forecast by a group of specialists. Unfortunately, they see any statistical model as a threat to their jobs, and are uncooperative in providing information. Nevertheless, the company provides a large amount of data on previous vehicles and their eventual resale values.
+
+-   *Model or make of the car*
+
+-   *Odometer reading (how many km)*
+
+-   *Conditions of the cars*
+
+-   *Leaser - Company the car was leased to*
+
+-   *Colour of car*
+
+-   *Date of sale/purchase*
 
 ### Self-Study 5.1. Introduction
 
@@ -30,19 +42,55 @@ A large car fleet company asks us to help them forecast vehicle resale values. T
 
 For the case described in Exercise 5.1, describe the five steps of forecasting in the context of this project.
 
+***1. Business Understanding and Problem Definition***
+
+-   *The main stakeholders should be defined.*
+
+-   *Everyone has been questioned about which way he or she can benefit from the new system.*
+
+*In case of the fleet company probably the group of specialists was not recognized as stakeholders which led to complications in gathering relevant information and later in finding an appropriate statistical approach and deployment of the new forecasting method.*
+
+***2. Data Understanding: Information Gathering and Exploratory Analysis.***
+
+-   *Data set of past sales should be obtained, including surrounding information such as the way data were gathered, possible outliers and incorrect records, special values in the data.*
+
+-   *Expertise knowledge should be obtained from people responsible for the sales such as seasonal price fluctuations, if there is dependency of the price on the situation in economy, also finding other possible factors which can influence the price.*
+
+-   *Graphs which show dependency of the sale price on different predictor variables should be considered.*
+
+-   *Dependency of the sale price on month of the year should be plot.*
+
+***3. Data Preparation***
+
+-   *Possible outliers and inconsistent information should be found (for example very small, zero or even negative prices).*
+
+***4. Choosing and fitting models***
+
+-   *A model to start from (for example a linear model) and predictor variables which most likely affect the forecasts should be chosen.*
+
+***5. Evaluating a forecasting model***
+
+-   *Predicting performance of the models must be evaluated.*
+
+-   *The model should be changed (for example by transforming parameters, adding or removing predictor variables) and it's performance evaluated.*
+
+*This should be done iteratively wit step 4 a few times until a satisfactory model is found.*
+
+***6. Deploying a Forecasting Model***
+
+-   *The appropriate software should be deployed to the company and relevant people should be educated how to use this software.*
+
+-   *Forecasting accuracy should be checked against new sales. If necessary the model should be updated and then the deployed software.*
+
 ## 5.2 Time Series in R
 
 ### Exercise 5.2. Time Series in R
 
-#### Exercise 5.2: Exploring tsibble Objects 
+#### Exercise 5.2: Exploring tsibble Objects
 
 1\. Explore the following 3 time series. (The data sets are all contained in the package tsibbledata.)
 
--   Bricks from aus_production
-
--   Lynx from pelt
-
--   Close from gafa_stock. () Use ? or help() to find out about the data in each series.
+-   Use ? or help() to find out about the data in each series.
 
 -   What is the time interval of each series?
 
@@ -50,23 +98,143 @@ For the case described in Exercise 5.1, describe the five steps of forecasting i
 
 -   For the last plot, modify the axis labels and title.
 
+```{r}
+#install.packages("tsibbledata")
+
+library(tsibbledata)
+library(tsibble)
+library(ggplot2)
+library(dplyr)
+```
+
+#### ?????????? interval aus_production wrong(?), autoplots do not work
+
+-   Bricks from aus_production
+
+```{r}
+aus_production
+
+help("aus_production")
+
+interval(aus_production)
+# The time interval is quarterly BUT help says half-hourly (?)
+
+# autoplot does not work: Objects of class <mts> are not supported by autoplot.
+# autoplot(aus_production, Bricks)
+# autoplot(as.ts(aus_production), Bricks)
+# aus_production |> autoplot(Bricks) 
+
+ggplot(aus_production, aes(x = Quarter, y = Bricks)) +
+  geom_line() +
+  labs(x = "Quarter", y = "Bricks sales", title = "Bricks sales over time")
+
+# An upward trend is apparent until 1980, after which the number of bricks being produced starts to decline. A seasonal pattern is evident in this data. Some sharp drops in some quarters can also be seen.
+```
+
+-   Lynx from pelt
+
+```{r}
+pelt
+
+help("pelt")
+
+interval(pelt)
+# Interval is daily. Looking closer at the data, we can see that the index is a Date variable. It also appears that observations occur only on trading days, creating lots of implicit missing values.
+
+# pelt |> autoplot(Lynx)
+ggplot(pelt, aes(x = Year, y = Lynx)) +
+  geom_line() +
+  labs(x = "Year", y = "Lynx sales", title = "Lynx sales over time")
+# Canadian lynx trappings are cyclic, as the extent of peak trappings 
+# is unpredictable, and the spacing between the peaks is irregular but approximately 10 years.
+```
+
+-   Close from gafa_stock.
+
+```{r}
+gafa_stock
+
+help("gafa_stock")
+
+interval(gafa_stock)
+# The time interval is yearly
+
+# gafa_stock |> autoplot(Close)
+# Stock prices for these technology stocks have risen for most of the series, until mid-late 2018.
+# The four stocks are on different scales, so they are not directly comparable. A plot with faceting would be better.
+
+gafa_stock |>
+  ggplot(aes(x=Date, y=Close, group=Symbol)) +
+  geom_line(aes(col=Symbol)) +
+  facet_grid(Symbol ~ ., scales='free')
+# The downturn in the second half of 2018 is now very clear, with Facebook taking a big drop (about 20%) in the middle of the year. The stocks tend to move roughly together, as you would expect with companies in the same industry.
+```
+
 2\. Use filter() to find what days corresponded to the peak closing price for each of the four stocks in gafa_stock from package tsibbledata.
+
+```{r}
+gafa_stock |>
+  group_by(Symbol) |>
+  filter(Close == max(Close)) |>
+  ungroup() |>
+  select(Symbol, Date, Close)
+```
 
 ### Self-Study 5.2. Time Series in R
 
-#### Self-Study 5.2: Creating tsibble Objects 
+#### Self-Study 5.2: Creating tsibble Objects
+
+#### ?????????? autoplot does not work
 
 1\. The USgas package contains data on the demand for natural gas in the US.
 
 -   Install the USgas package.
 
+```{r}
+#install.packages("USgas")
+library(USgas)
+```
+
 -   Create a tsibble from us_total with year as the index and state as the key.
 
+```{r}
+help(us_total) # y = yearly total natural gas consumption in a million cubic feet by state or US aggregate
+
+us_tsibble <- us_total %>% 
+  as_tsibble(index=year, 
+             key=state)
+```
+
 -   Plot the annual natural gas consumption by state for the New England area (comprising the states of Maine, Vermont, New Hampshire, Massachusetts, Connecticut and Rhode Island).
+
+```{r}
+# us_tsibble %>% 
+#   filter(state %in% c("Maine", "Vermont", "New Hampshire", "Massachusetts",
+#                       "Connecticut", "Rhode Island")) %>% 
+#   autoplot(y/1e3) +
+#   labs(y = "billion cubic feet")
+
+filtered_data <- us_tsibble %>%
+  filter(state %in% c("Maine", "Vermont", "New Hampshire", "Massachusetts",
+                      "Connecticut", "Rhode Island"))
+
+plot(filtered_data$year, filtered_data$y/1e3,
+     xlab = "Year", ylab = "billion cubic feet")
+```
 
 2\. Download tourism.xlsx from GitHub and read it into R using readxl::read_excel().
 
 -   Create a tsibble which is identical to the tourism tsibble from the tsibble package.
+
+```{r}
+library(readxl)
+my_tourism <- readxl::read_excel("tourism.xlsx") %>% 
+  mutate(Quarter = yearquarter(Quarter)) %>% 
+  as_tsibble(
+    index = Quarter,
+    key = c(Region, State, Purpose, Trips)
+  )
+```
 
 -   Find what combination of Region and Purpose had the maximum number of overnight trips on average.
 
@@ -76,7 +244,7 @@ For the case described in Exercise 5.1, describe the five steps of forecasting i
 
 ### Exercise 5.3. Visualizing Time Series
 
-#### Exercise 5.3: Time Plots, Seasonal Plots and ACF Plots 
+#### Exercise 5.3: Time Plots, Seasonal Plots and ACF Plots
 
 1\. The aus_arrivals data set comprises quarterly international arrivals to Australia from Japan, New Zealand, UK and the US.
 
@@ -86,11 +254,11 @@ For the case described in Exercise 5.1, describe the five steps of forecasting i
 
 2\. The following time plots and ACF plots correspond to four different time series. Your task is to match each time plot in the first row with one of the ACF plots in the second row.
 
-![](Materials L5/Ex 5.3.PNG)
+![](Materials%20L5/Ex%205.3.PNG)
 
 ## Self-Study 5.3. Visualizing Time Series
 
-#### Self-Study 5.3: Time Plots and White Noise 
+#### Self-Study 5.3: Time Plots and White Noise
 
 1\. Download the file tute1.csv from GitHub, open it in Excel (or some other spreadsheet application), and review its contents. You will find four columns of information. Columns B through D each contain a quarterly series, labelled Sales, AdBudget and GDP. Sales contains the quarterly sales for a small company over the period 1981-2005. AdBudget is the advertising budget and GDP is the gross domestic product. All series have been adjusted for inflation.
 
