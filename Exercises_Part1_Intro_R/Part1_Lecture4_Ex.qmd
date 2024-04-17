@@ -730,36 +730,13 @@ avocados <- avocados %>%
 str(avocados)
 ```
 
-##### ?????d) The data only holds total sales volumes (Total.Volume) and the sales volumes for haas avocados (small_haas, large_haas, xlarge_haas), but there are also other avocados included in Total.Volume. Double-check this by summing up haas avocado sales and comparing the sum with the total sales value.
-
---\> Berechnung ist komisch
+d\) The data only holds total sales volumes (Total.Volume) and the sales volumes for haas avocados (small_haas, large_haas, xlarge_haas), but there are also other avocados included in Total.Volume. Double-check this by summing up haas avocado sales and comparing the sum with the total sales value.
 
 ```{r}
-sum(avocados$Total.Volume - avocados$small_haas + avocados$large_haas + avocados$xlarge_haas > 0) # 18249 - This is the number of records in  of the data set. It means that on all days the Total Sales Volume is bigger than the Sales Volume of haas avocados.
+sum(avocados$Total.Volume - (avocados$small_haas + avocados$large_haas + avocados$xlarge_haas) > 0) # 18237 out of 18249 (This is the number of records in  of the data set.) It means that 18237 out of 18249 days the Total Sales Volume is bigger than the Sales Volume of haas avocados.
 ```
 
-```{r}
-sum(avocados$Total.Volume - avocados$small_haas - avocados$large_haas - avocados$xlarge_haas > 0) 
-```
-
-```{r}
-x = 10 - 5 + 3 + 1
-x
-y = 10 - (5 + 3 + 1)
-y
-z = 10 - 5 - 3 - 1 
-z
-```
-
-```{r}
-haas_avocado_sales <- avocados$small_haas + avocados$large_haas + avocados$xlarge_haas
-
-sum(avocados$Total.Volume - haas_avocado_sales  > 0)
-```
-
-##### ?????e) Create a new column other_avos that is the Total.Volume minus all haas avocados (small, large, xlarge).
-
---\> soblad Berechnung bekannt ist kann man es untern in mutate() anpassen!
+e\) Create a new column other_avos that is the Total.Volume minus all haas avocados (small, large, xlarge).
 
 ```{r}
 avocados <- avocados %>% 
@@ -865,9 +842,7 @@ average_sales <- by_size_tidy %>%
 print(average_sales)
 ```
 
-##### ?????k) We can also investigate sales by avocado type (conventional, organic).
-
---\> ohne .groups = 'drop' habe ich einen fehler
+k\) We can also investigate sales by avocado type (conventional, organic).
 
 -   To do this, consider again the original avocados data frame.
 
@@ -880,7 +855,7 @@ print(average_sales)
 ```{r}
 by_type <- avocados %>% 
   group_by(Date, type) %>% 
-  summarise(volume = sum(Total.Volume), .groups = 'drop')
+  summarise(volume = sum(Total.Volume), .groups = 'drop') # .groups = 'drops' needed, without I get an error
 ```
 
 l\) This data set is already tidy. Visualize the avocado sales over time by type using geom_smooth().
