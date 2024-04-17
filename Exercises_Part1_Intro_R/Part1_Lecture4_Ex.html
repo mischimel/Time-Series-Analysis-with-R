@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Michèle Fille">
+
+<title>R for Data Analytics Part 1, Lecture 4</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Part1_Lecture4_Ex_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Part1_Lecture4_Ex_files/libs/quarto-html/quarto.js"></script>
+<script src="Part1_Lecture4_Ex_files/libs/quarto-html/popper.min.js"></script>
+<script src="Part1_Lecture4_Ex_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Part1_Lecture4_Ex_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Part1_Lecture4_Ex_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Part1_Lecture4_Ex_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Part1_Lecture4_Ex_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Part1_Lecture4_Ex_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Part1_Lecture4_Ex_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="Part1_Lecture4_Ex_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="Part1_Lecture4_Ex_files/libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="Part1_Lecture4_Ex_files/libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="Part1_Lecture4_Ex_files/libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="Part1_Lecture4_Ex_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="Part1_Lecture4_Ex_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="Part1_Lecture4_Ex_files/libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="Part1_Lecture4_Ex_files/libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#lecture-4-packages-for-data-wrangling-dplyr-and-tidyr" id="toc-lecture-4-packages-for-data-wrangling-dplyr-and-tidyr" class="nav-link active" data-scroll-target="#lecture-4-packages-for-data-wrangling-dplyr-and-tidyr">Lecture 4 – Packages for Data Wrangling: dplyr and tidyr</a>
+  <ul>
+  <li><a href="#manipulating-data-with-dplyr" id="toc-manipulating-data-with-dplyr" class="nav-link" data-scroll-target="#manipulating-data-with-dplyr">4.1 Manipulating data with dplyr</a>
+  <ul class="collapse">
+  <li><a href="#exercise-4.1.-dyplyr" id="toc-exercise-4.1.-dyplyr" class="nav-link" data-scroll-target="#exercise-4.1.-dyplyr">Exercise 4.1. dyplyr</a>
+  <ul class="collapse">
+  <li><a href="#exercise-4.1-practicing-with-dplyr-verbs-and-pipes" id="toc-exercise-4.1-practicing-with-dplyr-verbs-and-pipes" class="nav-link" data-scroll-target="#exercise-4.1-practicing-with-dplyr-verbs-and-pipes">Exercise 4.1: Practicing with dplyr Verbs and Pipes</a></li>
+  </ul></li>
+  <li><a href="#self-study-4.1.-dyplyr" id="toc-self-study-4.1.-dyplyr" class="nav-link" data-scroll-target="#self-study-4.1.-dyplyr">Self-Study 4.1. dyplyr</a>
+  <ul class="collapse">
+  <li><a href="#self-study-4.1---task-1-using-dplyr-for-grouping" id="toc-self-study-4.1---task-1-using-dplyr-for-grouping" class="nav-link" data-scroll-target="#self-study-4.1---task-1-using-dplyr-for-grouping">Self-Study 4.1 - Task 1: Using dplyr for Grouping</a></li>
+  <li><a href="#self-study-4.1---task-2-using-the-dplyr-join-operations" id="toc-self-study-4.1---task-2-using-the-dplyr-join-operations" class="nav-link" data-scroll-target="#self-study-4.1---task-2-using-the-dplyr-join-operations">Self-Study 4.1 - Task 2: Using the dplyr Join Operations</a></li>
+  <li><a href="#self-study-4.1-task-3-comparing-base-r-and-dplyr" id="toc-self-study-4.1-task-3-comparing-base-r-and-dplyr" class="nav-link" data-scroll-target="#self-study-4.1-task-3-comparing-base-r-and-dplyr">Self-Study 4.1 – Task 3: Comparing base R and dplyr</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#reshaping-data-with-tidyr" id="toc-reshaping-data-with-tidyr" class="nav-link" data-scroll-target="#reshaping-data-with-tidyr">4.2 Reshaping data with tidyr</a>
+  <ul class="collapse">
+  <li><a href="#exercise-4.2.-tidyr" id="toc-exercise-4.2.-tidyr" class="nav-link" data-scroll-target="#exercise-4.2.-tidyr">Exercise 4.2. tidyr</a>
+  <ul class="collapse">
+  <li><a href="#exercise-4.2-task-1-plotting-time-series-of-weights" id="toc-exercise-4.2-task-1-plotting-time-series-of-weights" class="nav-link" data-scroll-target="#exercise-4.2-task-1-plotting-time-series-of-weights">Exercise 4.2 – Task 1: Plotting Time Series of Weights</a></li>
+  <li><a href="#exercise-4.2-task-2-german-car-manufacturers" id="toc-exercise-4.2-task-2-german-car-manufacturers" class="nav-link" data-scroll-target="#exercise-4.2-task-2-german-car-manufacturers">Exercise 4.2 – Task 2: German Car Manufacturers</a></li>
+  </ul></li>
+  <li><a href="#self-study-4.2.-tidyr" id="toc-self-study-4.2.-tidyr" class="nav-link" data-scroll-target="#self-study-4.2.-tidyr">Self-Study 4.2. tidyr</a>
+  <ul class="collapse">
+  <li><a href="#self-study-4.2-analyzing-avocado-sales-with-tidyr-and-dplyr" id="toc-self-study-4.2-analyzing-avocado-sales-with-tidyr-and-dplyr" class="nav-link" data-scroll-target="#self-study-4.2-analyzing-avocado-sales-with-tidyr-and-dplyr">Self-Study 4.2: Analyzing Avocado Sales with tidyr and dplyr</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">R for Data Analytics Part 1, Lecture 4</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Michèle Fille </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="lecture-4-packages-for-data-wrangling-dplyr-and-tidyr" class="level1">
+<h1>Lecture 4 – Packages for Data Wrangling: dplyr and tidyr</h1>
+<section id="manipulating-data-with-dplyr" class="level2">
+<h2 class="anchored" data-anchor-id="manipulating-data-with-dplyr">4.1 Manipulating data with dplyr</h2>
+<section id="exercise-4.1.-dyplyr" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-4.1.-dyplyr">Exercise 4.1. dyplyr</h3>
+<section id="exercise-4.1-practicing-with-dplyr-verbs-and-pipes" class="level4">
+<h4 class="anchored" data-anchor-id="exercise-4.1-practicing-with-dplyr-verbs-and-pipes">Exercise 4.1: Practicing with dplyr Verbs and Pipes</h4>
+<p>Install the nycflights13 package and load it. Also load dplyr.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("nycflights13")</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nycflights13)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Paket 'nycflights13' wurde unter R Version 4.3.3 erstellt</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attache Paket: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Die folgenden Objekte sind maskiert von 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Die folgenden Objekte sind maskiert von 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+</div>
+<p>a) The data frame flights is now accessible to you. Use appropriate functions to inspect it:</p>
+<ul>
+<li><p>How many rows and columns does it have?</p></li>
+<li><p>What are the names of the columns?</p></li>
+<li><p>Use ?flights to search for documentation on the data set (for what the columns represent).</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(flights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 336776</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(flights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 19</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(flights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "year"           "month"          "day"            "dep_time"      
+ [5] "sched_dep_time" "dep_delay"      "arr_time"       "sched_arr_time"
+ [9] "arr_delay"      "carrier"        "flight"         "tailnum"       
+[13] "origin"         "dest"           "air_time"       "distance"      
+[17] "hour"           "minute"         "time_hour"     </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>?flights</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>starte den http Server für die Hilfe fertig</code></pre>
+</div>
+</div>
+<ol start="2" type="a">
+<li>Use dplyr to give the data frame a new column that is the amount of time gained or lost while flying (that is: how much of the delay arriving occurred during flight, as opposed to before departing).</li>
+</ol>
+<ul>
+<li>Hint: If your new column doesn’t show up with print(), look at the bottom of the output written in grey: Maybe there was not enough space to print it in your console window! In this case you use print(flights, width = Inf) to show all columns.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>flights <span class="ot">&lt;-</span> <span class="fu">mutate</span>(flights, <span class="at">gain_in_air =</span> arr_delay <span class="sc">-</span> dep_delay)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(flights, <span class="at">width =</span> <span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 20
+    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+ 1  2013     1     1      517            515         2      830            819
+ 2  2013     1     1      533            529         4      850            830
+ 3  2013     1     1      542            540         2      923            850
+ 4  2013     1     1      544            545        -1     1004           1022
+ 5  2013     1     1      554            600        -6      812            837
+ 6  2013     1     1      554            558        -4      740            728
+ 7  2013     1     1      555            600        -5      913            854
+ 8  2013     1     1      557            600        -3      709            723
+ 9  2013     1     1      557            600        -3      838            846
+10  2013     1     1      558            600        -2      753            745
+   arr_delay carrier flight tailnum origin dest  air_time distance  hour minute
+       &lt;dbl&gt; &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+ 1        11 UA        1545 N14228  EWR    IAH        227     1400     5     15
+ 2        20 UA        1714 N24211  LGA    IAH        227     1416     5     29
+ 3        33 AA        1141 N619AA  JFK    MIA        160     1089     5     40
+ 4       -18 B6         725 N804JB  JFK    BQN        183     1576     5     45
+ 5       -25 DL         461 N668DN  LGA    ATL        116      762     6      0
+ 6        12 UA        1696 N39463  EWR    ORD        150      719     5     58
+ 7        19 B6         507 N516JB  EWR    FLL        158     1065     6      0
+ 8       -14 EV        5708 N829AS  LGA    IAD         53      229     6      0
+ 9        -8 B6          79 N593JB  JFK    MCO        140      944     6      0
+10         8 AA         301 N3ALAA  LGA    ORD        138      733     6      0
+   time_hour           gain_in_air
+   &lt;dttm&gt;                    &lt;dbl&gt;
+ 1 2013-01-01 05:00:00           9
+ 2 2013-01-01 05:00:00          16
+ 3 2013-01-01 05:00:00          31
+ 4 2013-01-01 05:00:00         -17
+ 5 2013-01-01 06:00:00         -19
+ 6 2013-01-01 05:00:00          16
+ 7 2013-01-01 06:00:00          24
+ 8 2013-01-01 06:00:00         -11
+ 9 2013-01-01 06:00:00          -5
+10 2013-01-01 06:00:00          10
+# ℹ 336,766 more rows</code></pre>
+</div>
+</div>
+<p>c) Use dplyr to sort your data frame in descending order by the column you just created. Save it as a variable (or in the same one!)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>flights1 <span class="ot">&lt;-</span> <span class="fu">arrange</span>(flights, <span class="fu">desc</span>(gain_in_air))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(<span class="fu">head</span>(flights1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>d) For practice, repeat the last 2 steps in a single statement using the pipe operator. You can clear your environmental variables to “reset” the data frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>flights2 <span class="ot">&lt;-</span> flights <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gain_in_air =</span> arr_delay <span class="sc">-</span> dep_delay) <span class="sc">%&gt;%</span> <span class="co"># if atribute not already created</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(gain_in_air))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>e) Make a histogram of the amount of time gained using the hist() function from base R. Alternatively, you can use ggplot2 to create a histogram.</p>
+<ul>
+<li><p>Hint: Use geom_histogram() to make a histogram with ggplot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># histogram with base R:</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(flights<span class="sc">$</span>gain_in_air) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Part1_Lecture4_Ex_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># histogram with ggplot2:</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(flights) <span class="sc">+</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> gain_in_air))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 9430 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Part1_Lecture4_Ex_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="672"></p>
+</div>
+</div></li>
+<li><p>Bonus: Compare the two visualizations: what is different and why are they different?</p>
+<p><em>In the first plot, the mode (the most frequent gain) has a count of over 150’000. In contrast, in the second plot, it has a count of over a bit over 100’000. The difference results from different binning: The bins (“intervals”) used for counting the frequencies have different widths. The larger the intervals, the more occurances per interval!</em></p></li>
+</ul>
+<p>f) On average, did flights gain or lose time?</p>
+<ul>
+<li>Note: Use the na.rm = TRUE argument to remove NA values from your aggregation. Otherwise the result will be NA.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(flights<span class="sc">$</span>gain_in_air, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -5.659779</code></pre>
+</div>
+</div>
+<p>g) Create a data.frame of flights headed to SeaTac (‘SEA’), only including the origin, destination, and the gain_in_air column you created.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>to_sea <span class="ot">&lt;-</span> flights <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(origin, dest, gain_in_air) <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(dest <span class="sc">==</span> <span class="st">"SEA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>h) On average, did flights to SeaTac gain or lose time?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(to_sea<span class="sc">$</span>gain_in_air, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -11.6991</code></pre>
+</div>
+</div>
+<p>i) Consider flights from JFK to SEA. What was the average, min, and max air time of those flights?</p>
+<ul>
+<li><p>Hint: Don’t forget to use the argument na.rm = TRUE in your aggregations.</p></li>
+<li><p>Bonus: Try to use pipes so that you can answer the last question in one single statement!</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(origin <span class="sc">==</span> <span class="st">"JFK"</span>,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>         dest <span class="sc">==</span> <span class="st">"SEA"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">avg_air_time =</span> <span class="fu">mean</span>(air_time, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">min_air_time =</span> <span class="fu">min</span>(air_time, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">max_air_time =</span> <span class="fu">max</span>(air_time, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  avg_air_time min_air_time max_air_time
+         &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+1         329.          275          389</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="self-study-4.1.-dyplyr" class="level3">
+<h3 class="anchored" data-anchor-id="self-study-4.1.-dyplyr">Self-Study 4.1. dyplyr</h3>
+<section id="self-study-4.1---task-1-using-dplyr-for-grouping" class="level4">
+<h4 class="anchored" data-anchor-id="self-study-4.1---task-1-using-dplyr-for-grouping">Self-Study 4.1 - Task 1: Using dplyr for Grouping</h4>
+<p>Install the nycflights13 package (if needed) and load it. Also load dplyr. View the data set flights .</p>
+<p>a) What was the average departure delay in each month? Save this as a data frame dep_delay_by_month.</p>
+<ul>
+<li>Hint: you’ll have to perform a grouping operation then summarizing your data.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>dep_delay_by_month <span class="ot">&lt;-</span> flights <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span> <span class="co"># creates a tibble that groups by month</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">delay_avg =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="co"># calculates the mean departure delay per month</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(dep_delay_by_month)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 2
+   month delay_avg
+   &lt;int&gt;     &lt;dbl&gt;
+ 1     1     10.0 
+ 2     2     10.8 
+ 3     3     13.2 
+ 4     4     13.9 
+ 5     5     13.0 
+ 6     6     20.8 
+ 7     7     21.7 
+ 8     8     12.6 
+ 9     9      6.72
+10    10      6.24
+11    11      5.44
+12    12     16.6 </code></pre>
+</div>
+</div>
+<p>b) Which month had the greatest average departure delay?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(dep_delay_by_month, delay_avg <span class="sc">==</span> <span class="fu">max</span>(delay_avg)) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(month)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  month
+  &lt;int&gt;
+1     7</code></pre>
+</div>
+</div>
+<p>c) If your data frame dep_delay_by_month contains only two columns (e.g., “month”, and “delay” in that order), you can create a scatterplot by passing that data frame directly to the base R function plot(). It is a generic function, that automatically makes a scatterplot when passed a data frame with 2 columns.</p>
+<ul>
+<li>Alternatively, you can of course also use ggplot2 to create the scatterplot.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With base R:</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dep_delay_by_month) <span class="co"># notice that we only need to pass the data frame as is!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Part1_Lecture4_Ex_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With ggplot2:</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># In this case, ggplot is more effort!! (BUT it's easier to pimp your plot so that it looks nicer :-D )</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dep_delay_by_month) <span class="sc">+</span> </span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> delay_avg))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Part1_Lecture4_Ex_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>d) To which destinations were the average arrival delays the highest?</p>
+<ul>
+<li>Hint: you’ll have to perform a grouping operation then summarize your data. You can use the head() function to view just the first few rows for checking.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>arr_delay_by_month <span class="ot">&lt;-</span> flights <span class="sc">%&gt;%</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dest) <span class="sc">%&gt;%</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">delay_avg =</span> <span class="fu">mean</span>(arr_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>delay_avg)  <span class="co"># = arrange(desc(delay_avg))</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(arr_delay_by_month)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+  dest  delay_avg
+  &lt;chr&gt;     &lt;dbl&gt;
+1 CAE        41.8
+2 TUL        33.7
+3 OKC        30.6
+4 JAC        28.1
+5 TYS        24.1
+6 MSN        20.2</code></pre>
+</div>
+</div>
+<p>e) The package nycflights13 also includes a data frame called airports. You can look up the above destinations in the airports data frame!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(airports)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 8
+  faa   name                             lat   lon   alt    tz dst   tzone      
+  &lt;chr&gt; &lt;chr&gt;                          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;      
+1 04G   Lansdowne Airport               41.1 -80.6  1044    -5 A     America/Ne…
+2 06A   Moton Field Municipal Airport   32.5 -85.7   264    -6 A     America/Ch…
+3 06C   Schaumburg Regional             42.0 -88.1   801    -6 A     America/Ch…
+4 06N   Randall Airport                 41.4 -74.4   523    -5 A     America/Ne…
+5 09J   Jekyll Island Airport           31.1 -81.4    11    -5 A     America/Ne…
+6 0A9   Elizabethton Municipal Airport  36.4 -82.2  1593    -5 A     America/Ne…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(airports, faa <span class="sc">==</span> arr_delay_by_month<span class="sc">$</span>dest[<span class="dv">1</span>]) <span class="co"># for example we can look up teh first destination, which is CAE.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 8
+  faa   name                    lat   lon   alt    tz dst   tzone           
+  &lt;chr&gt; &lt;chr&gt;                 &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;           
+1 CAE   Columbia Metropolitan  33.9 -81.1   236    -5 A     America/New_York</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># see all destinations from above (would blow up the file size)</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="co"># airports %&gt;%</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   filter(faa %in% arr_delay_by_month$dest)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>f) Which city was flown to with the highest average speed?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>city_fasted_speed <span class="ot">&lt;-</span> flights <span class="sc">%&gt;%</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">speed =</span> distance <span class="sc">/</span> air_time <span class="sc">*</span> <span class="dv">60</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dest) <span class="sc">%&gt;%</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_speed =</span> <span class="fu">mean</span>(speed, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(avg_speed <span class="sc">==</span> <span class="fu">max</span>(avg_speed, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>city_fasted_speed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  dest  avg_speed
+  &lt;chr&gt;     &lt;dbl&gt;
+1 ANC        490.</code></pre>
+</div>
+</div>
+</section>
+<section id="self-study-4.1---task-2-using-the-dplyr-join-operations" class="level4">
+<h4 class="anchored" data-anchor-id="self-study-4.1---task-2-using-the-dplyr-join-operations">Self-Study 4.1 - Task 2: Using the dplyr Join Operations</h4>
+<p>Install the nycflights13 package (if needed) and load it. Also load dplyr. View the data set flights .</p>
+<p>a) Create a dataframe of the average arrival delays for each destination from the flights data frame. Then use left_join() to join on the airports dataframe.</p>
+<ul>
+<li>Remark: The airports dataframe is also part of the nycflights13 package and holds information about the airports.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>avg_delay <span class="ot">&lt;-</span> flights <span class="sc">%&gt;%</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dest) <span class="sc">%&gt;%</span>    <span class="co"># creates it as tibble that groups rows by destination</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_delay =</span> <span class="fu">mean</span>(arr_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))  <span class="co"># calculates the mean arrival delay per group</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>avg_delay_dest <span class="ot">&lt;-</span> avg_delay <span class="sc">%&gt;%</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">faa =</span> dest) <span class="sc">%&gt;%</span> <span class="co"># create a new column faa, so we can use it as join condition</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(airports, <span class="at">by =</span> <span class="st">"faa"</span>)</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(avg_delay)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+  dest  avg_delay
+  &lt;chr&gt;     &lt;dbl&gt;
+1 ABQ        4.38
+2 ACK        4.85
+3 ALB       14.4 
+4 ANC       -2.5 
+5 ATL       11.3 
+6 AUS        6.02</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(avg_delay_dest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 10
+  dest  avg_delay faa   name                  lat    lon   alt    tz dst   tzone
+  &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+1 ABQ        4.38 ABQ   Albuquerque Intern…  35.0 -107.   5355    -7 A     Amer…
+2 ACK        4.85 ACK   Nantucket Mem        41.3  -70.1    48    -5 A     Amer…
+3 ALB       14.4  ALB   Albany Intl          42.7  -73.8   285    -5 A     Amer…
+4 ANC       -2.5  ANC   Ted Stevens Anchor…  61.2 -150.    152    -9 A     Amer…
+5 ATL       11.3  ATL   Hartsfield Jackson…  33.6  -84.4  1026    -5 A     Amer…
+6 AUS        6.02 AUS   Austin Bergstrom I…  30.2  -97.7   542    -6 A     Amer…</code></pre>
+</div>
+</div>
+<p>b) Which airport had the largest average arrival delay?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>largest_arrival_delay <span class="ot">&lt;-</span> avg_delay_dest <span class="sc">%&gt;%</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(avg_delay <span class="sc">==</span> <span class="fu">max</span>(avg_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(largest_arrival_delay)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 10
+  dest  avg_delay faa   name                   lat   lon   alt    tz dst   tzone
+  &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+1 CAE        41.8 CAE   Columbia Metropolit…  33.9 -81.1   236    -5 A     Amer…</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Notice that we could have done all the above in one single statement using pipes!</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>largest_arrival_delay <span class="ot">&lt;-</span> flights <span class="sc">%&gt;%</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dest) <span class="sc">%&gt;%</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_delay =</span> <span class="fu">mean</span>(arr_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">faa =</span> dest) <span class="sc">%&gt;%</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(airports, <span class="at">by =</span> <span class="st">"faa"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(avg_delay <span class="sc">==</span> <span class="fu">max</span>(avg_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(largest_arrival_delay)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 10
+  dest  avg_delay faa   name                   lat   lon   alt    tz dst   tzone
+  &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+1 CAE        41.8 CAE   Columbia Metropolit…  33.9 -81.1   236    -5 A     Amer…</code></pre>
+</div>
+</div>
+<p>c) Create a dataframe of the average arrival delay for each airline, then use left_join() to join on the airlines dataframe (which is also part of the nycflights13 package).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(airlines)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+  carrier name                    
+  &lt;chr&gt;   &lt;chr&gt;                   
+1 9E      Endeavor Air Inc.       
+2 AA      American Airlines Inc.  
+3 AS      Alaska Airlines Inc.    
+4 B6      JetBlue Airways         
+5 DL      Delta Air Lines Inc.    
+6 EV      ExpressJet Airlines Inc.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>avg_delay_airline <span class="ot">&lt;-</span> flights <span class="sc">%&gt;%</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(carrier) <span class="sc">%&gt;%</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_delay =</span> <span class="fu">mean</span>(arr_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(airlines, <span class="at">by =</span> <span class="st">"carrier"</span>)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>avg_delay_airline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 16 × 3
+   carrier avg_delay name                       
+   &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;                      
+ 1 9E          7.38  Endeavor Air Inc.          
+ 2 AA          0.364 American Airlines Inc.     
+ 3 AS         -9.93  Alaska Airlines Inc.       
+ 4 B6          9.46  JetBlue Airways            
+ 5 DL          1.64  Delta Air Lines Inc.       
+ 6 EV         15.8   ExpressJet Airlines Inc.   
+ 7 F9         21.9   Frontier Airlines Inc.     
+ 8 FL         20.1   AirTran Airways Corporation
+ 9 HA         -6.92  Hawaiian Airlines Inc.     
+10 MQ         10.8   Envoy Air                  
+11 OO         11.9   SkyWest Airlines Inc.      
+12 UA          3.56  United Air Lines Inc.      
+13 US          2.13  US Airways Inc.            
+14 VX          1.76  Virgin America             
+15 WN          9.65  Southwest Airlines Co.     
+16 YV         15.6   Mesa Airlines Inc.         </code></pre>
+</div>
+</div>
+<p>d) Which airline had the smallest average arrival delay?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>smallest_airline_delay <span class="ot">&lt;-</span> avg_delay_airline <span class="sc">%&gt;%</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(avg_delay <span class="sc">==</span> <span class="fu">max</span>(avg_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>smallest_airline_delay</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  carrier avg_delay name                  
+  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;                 
+1 F9           21.9 Frontier Airlines Inc.</code></pre>
+</div>
+</div>
+<p>OR all in one</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>smallest_airline_delay <span class="ot">&lt;-</span> flights <span class="sc">%&gt;%</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(carrier) <span class="sc">%&gt;%</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_delay =</span> <span class="fu">mean</span>(arr_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(airlines, <span class="at">by =</span> <span class="st">"carrier"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(avg_delay <span class="sc">==</span> <span class="fu">max</span>(avg_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>smallest_airline_delay</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  carrier avg_delay name                  
+  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;                 
+1 F9           21.9 Frontier Airlines Inc.</code></pre>
+</div>
+</div>
+</section>
+<section id="self-study-4.1-task-3-comparing-base-r-and-dplyr" class="level4">
+<h4 class="anchored" data-anchor-id="self-study-4.1-task-3-comparing-base-r-and-dplyr">Self-Study 4.1 – Task 3: Comparing base R and dplyr</h4>
+<p>a) Install and load dplyr if needed.</p>
+<p><em>Already done above</em></p>
+<p>b) Install and load the fueleconomy package from GitHub as follows:</p>
+<ul>
+<li><p>Install the devtools package (as usual).</p></li>
+<li><p>The devtool package allows us to make installations from GitHub. Use the following command to install the fueleconomy package from GitHub: devtools::install_github(“hadley/fueleconomy”)</p></li>
+<li><p>Load the fueleconomy package as usual.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("devtools")</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="co"># devtools::install_github("hadley/fueleconomy")</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fueleconomy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>c) Now you have access to the vehicles data frame. Use View() to get a first impression. Select from this data frame the column makes, which holds the different car manufacturers. Save it in the variable makes.</p>
+<ul>
+<li>Hint: Since you made a selection on a data frame, the result is a vector.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(vehicles)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>makes <span class="ot">&lt;-</span> vehicles<span class="sc">$</span>make</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>d) Use the function unique() to list and count the different car manufacturers. Alternatively, use the dplyr function distinct()to do the same. What is the difference?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(makes) <span class="co"># returns a vector</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "Acura"                              "Alfa Romeo"                        
+  [3] "AM General"                         "American Motors Corporation"       
+  [5] "ASC Incorporated"                   "Aston Martin"                      
+  [7] "Audi"                               "Aurora Cars Ltd"                   
+  [9] "Autokraft Limited"                  "Azure Dynamics"                    
+ [11] "Bentley"                            "Bertone"                           
+ [13] "Bill Dovell Motor Car Company"      "Bitter Gmbh and Co. Kg"            
+ [15] "BMW"                                "BMW Alpina"                        
+ [17] "Bugatti"                            "Buick"                             
+ [19] "BYD"                                "Cadillac"                          
+ [21] "CCC Engineering"                    "Chevrolet"                         
+ [23] "Chrysler"                           "CODA Automotive"                   
+ [25] "Consulier Industries Inc"           "CX Automotive"                     
+ [27] "Dabryan Coach Builders Inc"         "Dacia"                             
+ [29] "Daewoo"                             "Daihatsu"                          
+ [31] "Dodge"                              "E. P. Dutton, Inc."                
+ [33] "Eagle"                              "Environmental Rsch and Devp Corp"  
+ [35] "Evans Automobiles"                  "Excalibur Autos"                   
+ [37] "Federal Coach"                      "Ferrari"                           
+ [39] "Fiat"                               "Fisker"                            
+ [41] "Ford"                               "General Motors"                    
+ [43] "Geo"                                "GMC"                               
+ [45] "Goldacre"                           "Grumman Allied Industries"         
+ [47] "Grumman Olson"                      "Honda"                             
+ [49] "Hummer"                             "Hyundai"                           
+ [51] "Import Foreign Auto Sales Inc"      "Import Trade Services"             
+ [53] "Infiniti"                           "Isis Imports Ltd"                  
+ [55] "Isuzu"                              "J.K. Motors"                       
+ [57] "Jaguar"                             "JBA Motorcars, Inc."               
+ [59] "Jeep"                               "Kia"                               
+ [61] "Laforza Automobile Inc"             "Lambda Control Systems"            
+ [63] "Lamborghini"                        "Land Rover"                        
+ [65] "Lexus"                              "Lincoln"                           
+ [67] "London Coach Co Inc"                "London Taxi"                       
+ [69] "Lotus"                              "Mahindra"                          
+ [71] "Maserati"                           "Maybach"                           
+ [73] "Mazda"                              "Mcevoy Motors"                     
+ [75] "McLaren Automotive"                 "Mercedes-Benz"                     
+ [77] "Mercury"                            "Merkur"                            
+ [79] "MINI"                               "Mitsubishi"                        
+ [81] "Morgan"                             "Nissan"                            
+ [83] "Oldsmobile"                         "Panos"                             
+ [85] "Panoz Auto-Development"             "Panther Car Company Limited"       
+ [87] "PAS Inc - GMC"                      "PAS, Inc"                          
+ [89] "Peugeot"                            "Pininfarina"                       
+ [91] "Plymouth"                           "Pontiac"                           
+ [93] "Porsche"                            "Quantum Technologies"              
+ [95] "Qvale"                              "Ram"                               
+ [97] "Red Shift Ltd."                     "Renault"                           
+ [99] "Rolls-Royce"                        "Roush Performance"                 
+[101] "Ruf Automobile Gmbh"                "S and S Coach Company  E.p. Dutton"
+[103] "Saab"                               "Saleen"                            
+[105] "Saleen Performance"                 "Saturn"                            
+[107] "Scion"                              "Shelby"                            
+[109] "smart"                              "Spyker"                            
+[111] "SRT"                                "Sterling"                          
+[113] "Subaru"                             "Superior Coaches Div E.p. Dutton"  
+[115] "Suzuki"                             "Tecstar, LP"                       
+[117] "Tesla"                              "Texas Coach Company"               
+[119] "Toyota"                             "TVR Engineering Ltd"               
+[121] "Vector"                             "Vixen Motor Company"               
+[123] "Volga Associated Automobile"        "Volkswagen"                        
+[125] "Volvo"                              "VPG"                               
+[127] "Wallace Environmental"              "Yugo"                              </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(makes))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 128</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">distinct</span>(vehicles, make) <span class="co"># returns a tibble</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 128 × 1
+   make                       
+   &lt;chr&gt;                      
+ 1 Acura                      
+ 2 Alfa Romeo                 
+ 3 AM General                 
+ 4 American Motors Corporation
+ 5 ASC Incorporated           
+ 6 Aston Martin               
+ 7 Audi                       
+ 8 Aurora Cars Ltd            
+ 9 Autokraft Limited          
+10 Azure Dynamics             
+# ℹ 118 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">distinct</span>(vehicles, make))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 128</code></pre>
+</div>
+</div>
+<p>e) Filter the data set for vehicles manufactured in 1997. Do it first with base R, then with dplyr alone, then with dplyr and piping.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With base R:</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>cars_1997 <span class="ot">&lt;-</span> vehicles[vehicles<span class="sc">$</span>year <span class="sc">==</span> <span class="dv">1997</span>, ] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With dplyr:</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>cars_1997 <span class="ot">&lt;-</span> <span class="fu">filter</span>(vehicles, year <span class="sc">==</span> <span class="dv">1997</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With dplyr and piping:</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>cars_1997 <span class="ot">&lt;-</span> vehicles <span class="sc">%&gt;%</span>  </span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">1997</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>f) Arrange (sort, order) the 1997 cars by highway (hwy) gas milage (in increasing order). Do it first with base R, then with dplyr alone, then with dplyr and piping.</p>
+<ul>
+<li>Hint: In base R, use the order() function to get a vector of indices in order by value.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With base R:</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>cars_1997_byhwy <span class="ot">&lt;-</span> cars_1997[<span class="fu">order</span>(cars_1997<span class="sc">$</span>hwy), ]  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With dplyr:</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>cars_1997_byhwy <span class="ot">&lt;-</span> <span class="fu">arrange</span>(cars_1997, hwy)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With dplyr and piping:</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>cars_1997_byhwy <span class="ot">&lt;-</span> cars_1997 <span class="sc">%&gt;%</span>  </span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(hwy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>g) Mutate the ordered 1997 cars data frame to add a column average that holds the average gas milage (between city and highway mpg) for each car. Do it first with base R, then with dplyr alone, then with dplyr and piping.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With base R:</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>cars_1997_byhwy_av <span class="ot">&lt;-</span> cars_1997_byhwy </span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>cars_1997_byhwy_av<span class="sc">$</span>average <span class="ot">&lt;-</span> (cars_1997_byhwy_av<span class="sc">$</span>hwy <span class="sc">+</span> cars_1997_byhwy_av<span class="sc">$</span>cty) <span class="sc">/</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With dplyr:</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>cars_1997_byhwy_av <span class="ot">&lt;-</span> <span class="fu">mutate</span>(cars_1997_byhwy, <span class="at">average =</span> (hwy <span class="sc">+</span> cty) <span class="sc">/</span> <span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With dplyr and piping:</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>cars_1997_byhwy_av <span class="ot">&lt;-</span> cars_1997_byhwy <span class="sc">%&gt;%</span> </span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">average =</span> (hwy <span class="sc">+</span> cty) <span class="sc">/</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>h) Filter the whole vehicles data set for 2-Wheel Drive vehicles that get more than 20 miles/gallon in the city. Save this new data frame in a variable. Do it first with base R, then with dplyr alone, then with dplyr and piping.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With base R:</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>two_wheel_20_mpg <span class="ot">&lt;-</span> vehicles[vehicles<span class="sc">$</span>drive <span class="sc">==</span> <span class="st">"2-Wheel Drive"</span> <span class="sc">&amp;</span> vehicles<span class="sc">$</span>cty <span class="sc">&gt;</span> <span class="dv">20</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With dplyr:</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>two_wheel_20_mpg <span class="ot">&lt;-</span> <span class="fu">filter</span>(vehicles,</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>                           drive <span class="sc">==</span> <span class="st">"2-Wheel Drive"</span>,</span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>                           cty <span class="sc">&gt;</span> <span class="dv">20</span></span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With dplyr and piping:</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>two_wheel_20_mpg <span class="ot">&lt;-</span> vehicles <span class="sc">%&gt;%</span> </span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(drive <span class="sc">==</span> <span class="st">"2-Wheel Drive"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(cty <span class="sc">&gt;</span> <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>i ) Of the above vehicles, what is the vehicle ID of the vehicle with the worst (i.e., smallest) hwy mpg? Do it first with base R, then with dplyr alone, then with dplyr and piping.</p>
+<ul>
+<li>Hint: filter for the worst vehicle, then select its ID.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With base R:</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>worst_hwy <span class="ot">&lt;-</span> two_wheel_20_mpg<span class="sc">$</span>id[two_wheel_20_mpg<span class="sc">$</span>hwy <span class="sc">==</span> <span class="fu">min</span>(two_wheel_20_mpg<span class="sc">$</span>hwy)] <span class="co"># Notice that there are two cars with the min hwy mpg!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With dplyr:</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>filtered <span class="ot">&lt;-</span> <span class="fu">filter</span>(two_wheel_20_mpg, hwy <span class="sc">==</span> <span class="fu">min</span>(hwy))</span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>worst_hwy <span class="ot">&lt;-</span> <span class="fu">select</span>(filtered, id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With dplyr and piping:</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>worst_hwy <span class="ot">&lt;-</span> two_wheel_20_mpg <span class="sc">%&gt;%</span> </span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(hwy <span class="sc">==</span> <span class="fu">min</span>(hwy)) <span class="sc">%&gt;%</span> </span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>j) Write a function that takes a year_choice and a make_choice as parameters, and returns the vehicle model that has the best (i.e., highest) hwy miles/gallon of vehicles of that make in that year. You’ll need to filter more (and do some selecting)! Do it first with base R, then with dplyr alone, then with dplyr and piping.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With base R:</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>make_year_filter <span class="ot">&lt;-</span> <span class="cf">function</span>(make_choice, year_choice) {</span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>  filtered <span class="ot">&lt;-</span> vehicles[vehicles<span class="sc">$</span>make <span class="sc">==</span> make_choice <span class="sc">&amp;</span> vehicles<span class="sc">$</span>year <span class="sc">==</span> year_choice, ]</span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>  filtered[filtered<span class="sc">$</span>hwy <span class="sc">==</span> <span class="fu">max</span>(filtered<span class="sc">$</span>hwy), <span class="st">"model"</span>]</span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With dplyr:</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>make_year_filter1 <span class="ot">&lt;-</span> <span class="cf">function</span>(make_choice, year_choice) {</span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>  filtered <span class="ot">&lt;-</span> <span class="fu">filter</span>(vehicles, </span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>                     make <span class="sc">==</span> make_choice,</span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>                     year <span class="sc">==</span> year_choice)</span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>  filtered <span class="ot">&lt;-</span> <span class="fu">filter</span>(filtered, hwy <span class="sc">==</span> <span class="fu">max</span>(hwy))</span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(filtered, model)</span>
+<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With dplyr and piping:</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>make_year_filter2 <span class="ot">&lt;-</span> <span class="cf">function</span>(make_choice, year_choice) {</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>  vehicles <span class="sc">%&gt;%</span> </span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(make <span class="sc">==</span> make_choice,</span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>           year <span class="sc">==</span> year_choice) <span class="sc">%&gt;%</span> </span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(hwy <span class="sc">==</span> <span class="fu">max</span>(hwy)) <span class="sc">%&gt;%</span> </span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(model)</span>
+<span id="cb88-8"><a href="#cb88-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>k) What was the most efficient Honda model of 1995 ? (Use your function!)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make_year_filter</span>(<span class="st">"Honda"</span>, <span class="dv">1995</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  model      
+  &lt;chr&gt;      
+1 Civic HB VX</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make_year_filter1</span>(<span class="st">"Honda"</span>, <span class="dv">1995</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  model      
+  &lt;chr&gt;      
+1 Civic HB VX</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make_year_filter2</span>(<span class="st">"Honda"</span>, <span class="dv">1995</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  model      
+  &lt;chr&gt;      
+1 Civic HB VX</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="reshaping-data-with-tidyr" class="level2">
+<h2 class="anchored" data-anchor-id="reshaping-data-with-tidyr">4.2 Reshaping data with tidyr</h2>
+<section id="exercise-4.2.-tidyr" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-4.2.-tidyr">Exercise 4.2. tidyr</h3>
+<section id="exercise-4.2-task-1-plotting-time-series-of-weights" class="level4">
+<h4 class="anchored" data-anchor-id="exercise-4.2-task-1-plotting-time-series-of-weights">Exercise 4.2 – Task 1: Plotting Time Series of Weights</h4>
+<p>Consider the following toy data set of weight time series per person:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("tidyr")</span></span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a>name <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'ann'</span>, <span class="st">'bob'</span>, <span class="st">'charlie'</span>) </span>
+<span id="cb95-5"><a href="#cb95-5" aria-hidden="true" tabindex="-1"></a>jan <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">102</span>, <span class="dv">155</span>, <span class="dv">211</span>) </span>
+<span id="cb95-6"><a href="#cb95-6" aria-hidden="true" tabindex="-1"></a>feb <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">112</span>, <span class="dv">150</span>, <span class="dv">211</span>) </span>
+<span id="cb95-7"><a href="#cb95-7" aria-hidden="true" tabindex="-1"></a>mar <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">123</span>, <span class="dv">147</span>, <span class="dv">213</span>) </span>
+<span id="cb95-8"><a href="#cb95-8" aria-hidden="true" tabindex="-1"></a>apr <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">130</span>, <span class="dv">140</span>, <span class="dv">210</span>) </span>
+<span id="cb95-9"><a href="#cb95-9" aria-hidden="true" tabindex="-1"></a>wts <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">name=</span>name, <span class="at">jan=</span>jan, <span class="at">feb=</span>feb, <span class="at">mar=</span>mar, <span class="at">apr=</span>apr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>a) Copy / paste it in your R-script, view it and answer the following questions:</p>
+<ul>
+<li><p>What is the observed event?</p>
+<p><em>A person has a weight in a specific month. Example: Ann weighs 102 pounds in January. (Note: Probably it’s always measured on the same day of each month!)</em></p></li>
+<li><p>What are the recorded aspects of the event?</p>
+<p><em>(1) Name, (2) Month, (3) Weight</em></p></li>
+<li><p>Is this data set tidy or messy?</p>
+<p><em>messy</em></p></li>
+<li><p>If messy, describe in words how a tidy version of the data would look.</p>
+<p><em>(1) Keep name as a column</em></p>
+<p><em>(2) Create a column month. Its values are the current column names of columns 2-5.</em></p>
+<p><em>(3) Create a column weight. Its values are the current values of these current columns.</em></p></li>
+</ul>
+<p>b) Tidy up the data set using pivot_longer(). Store the result in a new data frame called wts_tidy.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>wts_tidy <span class="ot">&lt;-</span> wts <span class="sc">%&gt;%</span> <span class="fu">pivot_longer</span>(<span class="at">cols =</span> jan<span class="sc">:</span>apr,  <span class="co"># messy part</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">names_to =</span> <span class="st">"month"</span>, <span class="co"># headers as values for month</span></span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">values_to =</span> <span class="st">"weight"</span> <span class="co"># values as vales for weight</span></span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>                                 )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>c) Use geom_line() to plot the time series of weights per person. Hints:</p>
+<ul>
+<li><p>Map month to the x-axes.</p></li>
+<li><p>Map weight to the y-axes.</p></li>
+<li><p>Map name to the color scale.</p></li>
+<li><p>Additionally, use the argument group = name within the aesthetic of geom_line() to group observations by person. Otherwise, geom_line() tries to connect all obersvations with a single line, which does not work.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>wts_tidy <span class="sc">%&gt;%</span> </span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> month, </span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">y =</span> weight, </span>
+<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">col =</span> name, </span>
+<span id="cb97-6"><a href="#cb97-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">group =</span> name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Part1_Lecture4_Ex_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>d) Notice that the months in your x-axes are ordered alphabetically. That’s not the order we want! To change that, use mutate() to change the column month from integer to “ordered factor”. Hint:</p>
+<ul>
+<li><p>An “ordered factor” is a normal factor, but with an order that we define manually.</p></li>
+<li><p>do that, use the arguments ordered and level as follows: factor(month, ordered = TRUE, levels = c(‘jan’, ‘feb’, ‘mar’, ‘apr’))</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>wts_tidy <span class="ot">&lt;-</span> wts_tidy <span class="sc">%&gt;%</span> </span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">factor</span>(month,</span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">ordered =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">'jan'</span>, <span class="st">'feb'</span>, <span class="st">'mar'</span>, <span class="st">'apr'</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>e) Now redo the plot. The months will now appear in the order you specified above.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>wts_tidy <span class="sc">%&gt;%</span> </span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> month, </span>
+<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">y =</span> weight, </span>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">col =</span> name, </span>
+<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">group =</span> name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Part1_Lecture4_Ex_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>f) Now calculate the minimal, maximal and average weight per person.</p>
+<ul>
+<li>Hint: Use group_by() and summarize() from dplyr.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>wts_tidy_agg <span class="ot">&lt;-</span> wts_tidy <span class="sc">%&gt;%</span> </span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">min =</span> <span class="fu">min</span>(weight),</span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">max =</span> <span class="fu">max</span>(weight),</span>
+<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">avg =</span> <span class="fu">mean</span>(weight)</span>
+<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a>            )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="exercise-4.2-task-2-german-car-manufacturers" class="level4">
+<h4 class="anchored" data-anchor-id="exercise-4.2-task-2-german-car-manufacturers">Exercise 4.2 – Task 2: German Car Manufacturers</h4>
+<p>The following (made-up) data set lists different German car manufacturers. It reports how many models with a specified number of cylinders have been built per manufacturer.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>) </span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>cars <span class="ot">&lt;-</span> <span class="fu">tibble</span>( <span class="at">manufacturer =</span> <span class="fu">c</span>(<span class="st">"Audi"</span>, <span class="st">"BMW"</span>, </span>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Mercedes"</span>, <span class="st">"Opel"</span>, <span class="st">"VW"</span>), </span>
+<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a>                            <span class="st">`</span><span class="at">3 cyl</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sample</span>(<span class="dv">20</span>, <span class="dv">5</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a>                            <span class="st">`</span><span class="at">4 cyl</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sample</span>(<span class="dv">50</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">5</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb101-6"><a href="#cb101-6" aria-hidden="true" tabindex="-1"></a>                            <span class="st">`</span><span class="at">5 cyl</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sample</span>(<span class="dv">10</span>, <span class="dv">5</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb101-7"><a href="#cb101-7" aria-hidden="true" tabindex="-1"></a>                            <span class="st">`</span><span class="at">6 cyl</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sample</span>(<span class="dv">30</span><span class="sc">:</span><span class="dv">50</span>, <span class="dv">5</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb101-8"><a href="#cb101-8" aria-hidden="true" tabindex="-1"></a>                            <span class="st">`</span><span class="at">8 cyl</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sample</span>(<span class="dv">20</span><span class="sc">:</span><span class="dv">40</span>, <span class="dv">5</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb101-9"><a href="#cb101-9" aria-hidden="true" tabindex="-1"></a>                            <span class="st">`</span><span class="at">10 cyl</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sample</span>(<span class="dv">10</span>, <span class="dv">5</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb101-10"><a href="#cb101-10" aria-hidden="true" tabindex="-1"></a>                            <span class="st">`</span><span class="at">12 cyl</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sample</span>(<span class="dv">20</span>, <span class="dv">5</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb101-11"><a href="#cb101-11" aria-hidden="true" tabindex="-1"></a>                            <span class="st">`</span><span class="at">16 cyl</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">5</span>) </span>
+<span id="cb101-12"><a href="#cb101-12" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>a) Copy / paste the above code in your R-script, view the data set, and answer the following questions:</p>
+<ul>
+<li><p>What is the observed event?</p>
+<p><em>A manufacturer produces a certain number of cars with a certains number of cylinders. (Example: Audi builds 5 cars with 3 cylinders.)</em></p></li>
+<li><p>What are the recorded aspects of the event?</p>
+<p><em>(1) manufacturer, (2) number of cylinders, (3) number of cars</em></p></li>
+<li><p>Is this data set tidy or messy?</p>
+<p><em>messy</em></p></li>
+<li><p>If messy, describe in words how a tidy version of the data would look.</p>
+<p><em>(1) Keep ‘manufacturer’ as a column.</em></p>
+<p><em>(2) Create a column ‘cyl’. Its values are the current column names of columns 2-5.</em></p>
+<p><em>(3) Create a column ‘freq’. Its values are the current values of columns 2-5.</em></p></li>
+</ul>
+<p>b) Tidy up the data set using pivot_longer(). Store the result in a new data frame cars_tidy.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>cars_tidy <span class="ot">&lt;-</span> cars <span class="sc">%&gt;%</span> <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>manufacturer,</span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">names_to =</span> <span class="st">"cyl"</span>,</span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">values_to =</span> <span class="st">"freq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>c) Use geom_col() to create a bar plot that shows the frequency per cylinder. Use facet_wrap() to create one such plot per manufacturer. Use ggplotly() to make it interactive.</p>
+<ul>
+<li>Hint: Don’t forget to load the library plotly.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attache Paket: 'plotly'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Das folgende Objekt ist maskiert 'package:ggplot2':
+
+    last_plot</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Das folgende Objekt ist maskiert 'package:stats':
+
+    filter</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Das folgende Objekt ist maskiert 'package:graphics':
+
+    layout</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>p_tidy_cars <span class="ot">&lt;-</span> cars_tidy <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> cyl,</span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> freq)) <span class="sc">+</span></span>
+<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> manufacturer)</span>
+<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p_tidy_cars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-3d7e64f6b58789432012" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-3d7e64f6b58789432012">{"x":{"data":[{"orientation":"v","width":[0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999991,0.90000000000000013,0.90000000000000036],"base":[0,0,0,0,0,0,0,0],"x":[4,5,6,7,8,1,2,3],"y":[5,92,7,31,24,9,8,0],"text":["cyl: 3 cyl<br />freq:  5","cyl: 4 cyl<br />freq: 92","cyl: 5 cyl<br />freq:  7","cyl: 6 cyl<br />freq: 31","cyl: 8 cyl<br />freq: 24","cyl: 10 cyl<br />freq:  9","cyl: 12 cyl<br />freq:  8","cyl: 16 cyl<br />freq:  0"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(89,89,89,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999991,0.90000000000000013,0.90000000000000036],"base":[0,0,0,0,0,0,0,0],"x":[4,5,6,7,8,1,2,3],"y":[12,80,8,41,28,8,15,0],"text":["cyl: 3 cyl<br />freq: 12","cyl: 4 cyl<br />freq: 80","cyl: 5 cyl<br />freq:  8","cyl: 6 cyl<br />freq: 41","cyl: 8 cyl<br />freq: 28","cyl: 10 cyl<br />freq:  8","cyl: 12 cyl<br />freq: 15","cyl: 16 cyl<br />freq:  0"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(89,89,89,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999991,0.90000000000000013,0.90000000000000036],"base":[0,0,0,0,0,0,0,0],"x":[4,5,6,7,8,1,2,3],"y":[7,57,8,42,28,6,10,0],"text":["cyl: 3 cyl<br />freq:  7","cyl: 4 cyl<br />freq: 57","cyl: 5 cyl<br />freq:  8","cyl: 6 cyl<br />freq: 42","cyl: 8 cyl<br />freq: 28","cyl: 10 cyl<br />freq:  6","cyl: 12 cyl<br />freq: 10","cyl: 16 cyl<br />freq:  0"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(89,89,89,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x3","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999991,0.90000000000000013,0.90000000000000036],"base":[0,0,0,0,0,0,0,0],"x":[4,5,6,7,8,1,2,3],"y":[4,69,8,34,37,3,11,0],"text":["cyl: 3 cyl<br />freq:  4","cyl: 4 cyl<br />freq: 69","cyl: 5 cyl<br />freq:  8","cyl: 6 cyl<br />freq: 34","cyl: 8 cyl<br />freq: 37","cyl: 10 cyl<br />freq:  3","cyl: 12 cyl<br />freq: 11","cyl: 16 cyl<br />freq:  0"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(89,89,89,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999991,0.90000000000000013,0.90000000000000036],"base":[0,0,0,0,0,0,0,0],"x":[4,5,6,7,8,1,2,3],"y":[8,59,5,37,35,6,3,0],"text":["cyl: 3 cyl<br />freq:  8","cyl: 4 cyl<br />freq: 59","cyl: 5 cyl<br />freq:  5","cyl: 6 cyl<br />freq: 37","cyl: 8 cyl<br />freq: 35","cyl: 10 cyl<br />freq:  6","cyl: 12 cyl<br />freq:  3","cyl: 16 cyl<br />freq:  0"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(89,89,89,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":37.917808219178085,"r":7.3059360730593621,"b":40.182648401826491,"l":37.260273972602747},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,0.32925636007827785],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,8.5999999999999996],"tickmode":"array","ticktext":["10 cyl","12 cyl","16 cyl","3 cyl","4 cyl","5 cyl","6 cyl","8 cyl"],"tickvals":[1,2,3,4,5,6,7,8],"categoryorder":"array","categoryarray":["10 cyl","12 cyl","16 cyl","3 cyl","4 cyl","5 cyl","6 cyl","8 cyl"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"annotations":[{"text":"cyl","x":0.5,"y":0,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"top","annotationType":"axis","yshift":-21.917808219178088},{"text":"freq","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-21.917808219178081},{"text":"Audi","x":0.16462818003913893,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"BMW","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Mercedes","x":0.83537181996086107,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Opel","x":0.16462818003913893,"y":0.48515981735159819,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"VW","x":0.5,"y":0.48515981735159819,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"yaxis":{"domain":[0.51484018264840181,1],"automargin":true,"type":"linear","autorange":false,"range":[-4.6000000000000005,96.599999999999994],"tickmode":"array","ticktext":["0","25","50","75"],"tickvals":[0,25,50,75],"categoryorder":"array","categoryarray":["0","25","50","75"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.32925636007827785,"y0":0.51484018264840181,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":0.32925636007827785,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.33741030658838878,"x1":0.66258969341161122,"y0":0.51484018264840181,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.33741030658838878,"x1":0.66258969341161122,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.67074363992172203,"x1":1,"y0":0.51484018264840181,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.67074363992172203,"x1":1,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.32925636007827785,"y0":0,"y1":0.48515981735159819},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":0.32925636007827785,"y0":0,"y1":23.37899543378996,"yanchor":0.48515981735159819,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.33741030658838878,"x1":0.66258969341161122,"y0":0,"y1":0.48515981735159819},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.33741030658838878,"x1":0.66258969341161122,"y0":0,"y1":23.37899543378996,"yanchor":0.48515981735159819,"ysizemode":"pixel"}],"xaxis2":{"type":"linear","autorange":false,"range":[0.40000000000000002,8.5999999999999996],"tickmode":"array","ticktext":["10 cyl","12 cyl","16 cyl","3 cyl","4 cyl","5 cyl","6 cyl","8 cyl"],"tickvals":[1,2,3,4,5,6,7,8],"categoryorder":"array","categoryarray":["10 cyl","12 cyl","16 cyl","3 cyl","4 cyl","5 cyl","6 cyl","8 cyl"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.33741030658838878,0.66258969341161122],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"xaxis3":{"type":"linear","autorange":false,"range":[0.40000000000000002,8.5999999999999996],"tickmode":"array","ticktext":["10 cyl","12 cyl","16 cyl","3 cyl","4 cyl","5 cyl","6 cyl","8 cyl"],"tickvals":[1,2,3,4,5,6,7,8],"categoryorder":"array","categoryarray":["10 cyl","12 cyl","16 cyl","3 cyl","4 cyl","5 cyl","6 cyl","8 cyl"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.67074363992172203,1],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis2":{"type":"linear","autorange":false,"range":[-4.6000000000000005,96.599999999999994],"tickmode":"array","ticktext":["0","25","50","75"],"tickvals":[0,25,50,75],"categoryorder":"array","categoryarray":["0","25","50","75"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0,0.48515981735159819],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"c18de71e3b":{"x":{},"y":{},"type":"bar"}},"cur_data":"c18de71e3b","visdat":{"c18de71e3b":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>d) Notice that the number of cylinders is not in a natural order. To change that, use mutate() to change the data type of the variable cyl. To do that, you have 2 options:</p>
+<ol type="1">
+<li><p>You can either convert the variable cyl in an ordered factor,</p></li>
+<li><p>or you can use gsub(“\D”, ““, cyl) and as.numeric() to extract the numbers from the strings.</p></li>
+</ol>
+<p>Try out both options!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Option 1: converting it 'cyl' in an ordered factor:</span></span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>cars_tidy1 <span class="ot">&lt;-</span> cars_tidy <span class="sc">%&gt;%</span> </span>
+<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cyl =</span> <span class="fu">factor</span>(cyl,</span>
+<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ordered =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"3 cyl"</span>, <span class="st">"4 cyl"</span>, <span class="st">"5 cyl"</span>, <span class="st">"6 cyl"</span>, <span class="st">"8 cyl"</span>, <span class="st">"10 cyl"</span>, <span class="st">"12 cyl"</span>, <span class="st">"16 cyl"</span>)</span>
+<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a>                     )</span>
+<span id="cb109-7"><a href="#cb109-7" aria-hidden="true" tabindex="-1"></a>         )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Option 2: using gsub() to extract the numbers from the strings</span></span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>cars_tidy2 <span class="ot">&lt;-</span> cars_tidy <span class="sc">%&gt;%</span> </span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cyl =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">D"</span>, <span class="st">""</span>, cyl))) <span class="co"># All non-numbers (\\D) are replaced by the empty string ("").</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>e) Redo the plot for both options.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>p_tidy_cars1 <span class="ot">&lt;-</span> cars_tidy1 <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> cyl,</span>
+<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> freq)) <span class="sc">+</span></span>
+<span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> manufacturer)</span>
+<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p_tidy_cars1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-a573b899ecbf86b94008" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-a573b899ecbf86b94008">{"x":{"data":[{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947],"base":[0,0,0,0,0,0,0,0],"x":[1,2,3,4,5,6,7,8],"y":[5,92,7,31,24,9,8,0],"text":["cyl: 3 cyl<br />freq:  5","cyl: 4 cyl<br />freq: 92","cyl: 5 cyl<br />freq:  7","cyl: 6 cyl<br />freq: 31","cyl: 8 cyl<br />freq: 24","cyl: 10 cyl<br />freq:  9","cyl: 12 cyl<br />freq:  8","cyl: 16 cyl<br />freq:  0"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(89,89,89,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947],"base":[0,0,0,0,0,0,0,0],"x":[1,2,3,4,5,6,7,8],"y":[12,80,8,41,28,8,15,0],"text":["cyl: 3 cyl<br />freq: 12","cyl: 4 cyl<br />freq: 80","cyl: 5 cyl<br />freq:  8","cyl: 6 cyl<br />freq: 41","cyl: 8 cyl<br />freq: 28","cyl: 10 cyl<br />freq:  8","cyl: 12 cyl<br />freq: 15","cyl: 16 cyl<br />freq:  0"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(89,89,89,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947],"base":[0,0,0,0,0,0,0,0],"x":[1,2,3,4,5,6,7,8],"y":[7,57,8,42,28,6,10,0],"text":["cyl: 3 cyl<br />freq:  7","cyl: 4 cyl<br />freq: 57","cyl: 5 cyl<br />freq:  8","cyl: 6 cyl<br />freq: 42","cyl: 8 cyl<br />freq: 28","cyl: 10 cyl<br />freq:  6","cyl: 12 cyl<br />freq: 10","cyl: 16 cyl<br />freq:  0"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(89,89,89,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x3","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947],"base":[0,0,0,0,0,0,0,0],"x":[1,2,3,4,5,6,7,8],"y":[4,69,8,34,37,3,11,0],"text":["cyl: 3 cyl<br />freq:  4","cyl: 4 cyl<br />freq: 69","cyl: 5 cyl<br />freq:  8","cyl: 6 cyl<br />freq: 34","cyl: 8 cyl<br />freq: 37","cyl: 10 cyl<br />freq:  3","cyl: 12 cyl<br />freq: 11","cyl: 16 cyl<br />freq:  0"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(89,89,89,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947],"base":[0,0,0,0,0,0,0,0],"x":[1,2,3,4,5,6,7,8],"y":[8,59,5,37,35,6,3,0],"text":["cyl: 3 cyl<br />freq:  8","cyl: 4 cyl<br />freq: 59","cyl: 5 cyl<br />freq:  5","cyl: 6 cyl<br />freq: 37","cyl: 8 cyl<br />freq: 35","cyl: 10 cyl<br />freq:  6","cyl: 12 cyl<br />freq:  3","cyl: 16 cyl<br />freq:  0"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(89,89,89,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":37.917808219178085,"r":7.3059360730593621,"b":40.182648401826491,"l":37.260273972602747},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,0.32925636007827785],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,8.5999999999999996],"tickmode":"array","ticktext":["3 cyl","4 cyl","5 cyl","6 cyl","8 cyl","10 cyl","12 cyl","16 cyl"],"tickvals":[1,2,3,4,5,6,7,8],"categoryorder":"array","categoryarray":["3 cyl","4 cyl","5 cyl","6 cyl","8 cyl","10 cyl","12 cyl","16 cyl"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"annotations":[{"text":"cyl","x":0.5,"y":0,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"top","annotationType":"axis","yshift":-21.917808219178088},{"text":"freq","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-21.917808219178081},{"text":"Audi","x":0.16462818003913893,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"BMW","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Mercedes","x":0.83537181996086107,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Opel","x":0.16462818003913893,"y":0.48515981735159819,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"VW","x":0.5,"y":0.48515981735159819,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"yaxis":{"domain":[0.51484018264840181,1],"automargin":true,"type":"linear","autorange":false,"range":[-4.6000000000000005,96.599999999999994],"tickmode":"array","ticktext":["0","25","50","75"],"tickvals":[0,25,50,75],"categoryorder":"array","categoryarray":["0","25","50","75"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.32925636007827785,"y0":0.51484018264840181,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":0.32925636007827785,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.33741030658838878,"x1":0.66258969341161122,"y0":0.51484018264840181,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.33741030658838878,"x1":0.66258969341161122,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.67074363992172203,"x1":1,"y0":0.51484018264840181,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.67074363992172203,"x1":1,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.32925636007827785,"y0":0,"y1":0.48515981735159819},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":0.32925636007827785,"y0":0,"y1":23.37899543378996,"yanchor":0.48515981735159819,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.33741030658838878,"x1":0.66258969341161122,"y0":0,"y1":0.48515981735159819},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.33741030658838878,"x1":0.66258969341161122,"y0":0,"y1":23.37899543378996,"yanchor":0.48515981735159819,"ysizemode":"pixel"}],"xaxis2":{"type":"linear","autorange":false,"range":[0.40000000000000002,8.5999999999999996],"tickmode":"array","ticktext":["3 cyl","4 cyl","5 cyl","6 cyl","8 cyl","10 cyl","12 cyl","16 cyl"],"tickvals":[1,2,3,4,5,6,7,8],"categoryorder":"array","categoryarray":["3 cyl","4 cyl","5 cyl","6 cyl","8 cyl","10 cyl","12 cyl","16 cyl"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.33741030658838878,0.66258969341161122],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"xaxis3":{"type":"linear","autorange":false,"range":[0.40000000000000002,8.5999999999999996],"tickmode":"array","ticktext":["3 cyl","4 cyl","5 cyl","6 cyl","8 cyl","10 cyl","12 cyl","16 cyl"],"tickvals":[1,2,3,4,5,6,7,8],"categoryorder":"array","categoryarray":["3 cyl","4 cyl","5 cyl","6 cyl","8 cyl","10 cyl","12 cyl","16 cyl"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.67074363992172203,1],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis2":{"type":"linear","autorange":false,"range":[-4.6000000000000005,96.599999999999994],"tickmode":"array","ticktext":["0","25","50","75"],"tickvals":[0,25,50,75],"categoryorder":"array","categoryarray":["0","25","50","75"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0,0.48515981735159819],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"c181f1e19ed":{"x":{},"y":{},"type":"bar"}},"cur_data":"c181f1e19ed","visdat":{"c181f1e19ed":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>p_tidy_cars2 <span class="ot">&lt;-</span> cars_tidy2 <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> cyl,</span>
+<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> freq)) <span class="sc">+</span></span>
+<span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> manufacturer)</span>
+<span id="cb112-5"><a href="#cb112-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p_tidy_cars2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-f068c4b17fc53c5ee7aa" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-f068c4b17fc53c5ee7aa">{"x":{"data":[{"orientation":"v","width":[0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999858,0.89999999999999858,0.89999999999999858],"base":[0,0,0,0,0,0,0,0],"x":[3,4,5,6,8,10,12,16],"y":[5,92,7,31,24,9,8,0],"text":["cyl:  3<br />freq:  5","cyl:  4<br />freq: 92","cyl:  5<br />freq:  7","cyl:  6<br />freq: 31","cyl:  8<br />freq: 24","cyl: 10<br />freq:  9","cyl: 12<br />freq:  8","cyl: 16<br />freq:  0"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(89,89,89,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999858,0.89999999999999858,0.89999999999999858],"base":[0,0,0,0,0,0,0,0],"x":[3,4,5,6,8,10,12,16],"y":[12,80,8,41,28,8,15,0],"text":["cyl:  3<br />freq: 12","cyl:  4<br />freq: 80","cyl:  5<br />freq:  8","cyl:  6<br />freq: 41","cyl:  8<br />freq: 28","cyl: 10<br />freq:  8","cyl: 12<br />freq: 15","cyl: 16<br />freq:  0"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(89,89,89,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999858,0.89999999999999858,0.89999999999999858],"base":[0,0,0,0,0,0,0,0],"x":[3,4,5,6,8,10,12,16],"y":[7,57,8,42,28,6,10,0],"text":["cyl:  3<br />freq:  7","cyl:  4<br />freq: 57","cyl:  5<br />freq:  8","cyl:  6<br />freq: 42","cyl:  8<br />freq: 28","cyl: 10<br />freq:  6","cyl: 12<br />freq: 10","cyl: 16<br />freq:  0"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(89,89,89,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x3","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999858,0.89999999999999858,0.89999999999999858],"base":[0,0,0,0,0,0,0,0],"x":[3,4,5,6,8,10,12,16],"y":[4,69,8,34,37,3,11,0],"text":["cyl:  3<br />freq:  4","cyl:  4<br />freq: 69","cyl:  5<br />freq:  8","cyl:  6<br />freq: 34","cyl:  8<br />freq: 37","cyl: 10<br />freq:  3","cyl: 12<br />freq: 11","cyl: 16<br />freq:  0"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(89,89,89,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999858,0.89999999999999858,0.89999999999999858],"base":[0,0,0,0,0,0,0,0],"x":[3,4,5,6,8,10,12,16],"y":[8,59,5,37,35,6,3,0],"text":["cyl:  3<br />freq:  8","cyl:  4<br />freq: 59","cyl:  5<br />freq:  5","cyl:  6<br />freq: 37","cyl:  8<br />freq: 35","cyl: 10<br />freq:  6","cyl: 12<br />freq:  3","cyl: 16<br />freq:  0"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(89,89,89,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":37.917808219178085,"r":7.3059360730593621,"b":40.182648401826491,"l":37.260273972602747},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,0.32925636007827785],"automargin":true,"type":"linear","autorange":false,"range":[1.855,17.145],"tickmode":"array","ticktext":["4","8","12","16"],"tickvals":[4,8,12,16],"categoryorder":"array","categoryarray":["4","8","12","16"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"annotations":[{"text":"cyl","x":0.5,"y":0,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"top","annotationType":"axis","yshift":-21.917808219178088},{"text":"freq","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-21.917808219178081},{"text":"Audi","x":0.16462818003913893,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"BMW","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Mercedes","x":0.83537181996086107,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Opel","x":0.16462818003913893,"y":0.48515981735159819,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"VW","x":0.5,"y":0.48515981735159819,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"yaxis":{"domain":[0.51484018264840181,1],"automargin":true,"type":"linear","autorange":false,"range":[-4.6000000000000005,96.599999999999994],"tickmode":"array","ticktext":["0","25","50","75"],"tickvals":[0,25,50,75],"categoryorder":"array","categoryarray":["0","25","50","75"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.32925636007827785,"y0":0.51484018264840181,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":0.32925636007827785,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.33741030658838878,"x1":0.66258969341161122,"y0":0.51484018264840181,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.33741030658838878,"x1":0.66258969341161122,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.67074363992172203,"x1":1,"y0":0.51484018264840181,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.67074363992172203,"x1":1,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.32925636007827785,"y0":0,"y1":0.48515981735159819},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":0.32925636007827785,"y0":0,"y1":23.37899543378996,"yanchor":0.48515981735159819,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.33741030658838878,"x1":0.66258969341161122,"y0":0,"y1":0.48515981735159819},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.33741030658838878,"x1":0.66258969341161122,"y0":0,"y1":23.37899543378996,"yanchor":0.48515981735159819,"ysizemode":"pixel"}],"xaxis2":{"type":"linear","autorange":false,"range":[1.855,17.145],"tickmode":"array","ticktext":["4","8","12","16"],"tickvals":[4,8,12,16],"categoryorder":"array","categoryarray":["4","8","12","16"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.33741030658838878,0.66258969341161122],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"xaxis3":{"type":"linear","autorange":false,"range":[1.855,17.145],"tickmode":"array","ticktext":["4","8","12","16"],"tickvals":[4,8,12,16],"categoryorder":"array","categoryarray":["4","8","12","16"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.67074363992172203,1],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis2":{"type":"linear","autorange":false,"range":[-4.6000000000000005,96.599999999999994],"tickmode":"array","ticktext":["0","25","50","75"],"tickvals":[0,25,50,75],"categoryorder":"array","categoryarray":["0","25","50","75"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0,0.48515981735159819],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"c1818164845":{"x":{},"y":{},"type":"bar"}},"cur_data":"c1818164845","visdat":{"c1818164845":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<ul>
+<li><p>Do you notice a difference?</p>
+<p><em>- When using gsub(), cyl is converted to numbers, and thus, ggplot puts a number scale on the x-axes.</em></p>
+<p><em>Thus, there is a slot reserved for, e.g., 7 cylinders, even though cars with 7 cylinders do not exist!</em></p>
+<p><em>On the other hand, cars with 16 cylinders exist, but zero are produced.</em></p>
+<p><em>When using this option we cannot distinguish between ‘non-existing’ and ‘zero’!</em></p>
+<p><em>- This does not happen when we use ordered factors.</em></p></li>
+<li><p>Which option is better for visualization?</p>
+<p><em>- Thus, ordered factors are the better option for visualization!</em></p></li>
+</ul>
+</section>
+</section>
+<section id="self-study-4.2.-tidyr" class="level3">
+<h3 class="anchored" data-anchor-id="self-study-4.2.-tidyr">Self-Study 4.2. tidyr</h3>
+<section id="self-study-4.2-analyzing-avocado-sales-with-tidyr-and-dplyr" class="level4">
+<h4 class="anchored" data-anchor-id="self-study-4.2-analyzing-avocado-sales-with-tidyr-and-dplyr">Self-Study 4.2: Analyzing Avocado Sales with tidyr and dplyr</h4>
+<p>a) Load the packages tidyr, dplyr, and ggplot2. Download the avocado.csv file from GitHub and load it into a variable avocados. Get a first impression of the data using View() and str().</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a>avocados <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"avocado.csv"</span>)</span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(avocados)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   18249 obs. of  14 variables:
+ $ X           : int  0 1 2 3 4 5 6 7 8 9 ...
+ $ Date        : chr  "2015-12-27" "2015-12-20" "2015-12-13" "2015-12-06" ...
+ $ AveragePrice: num  1.33 1.35 0.93 1.08 1.28 1.26 0.99 0.98 1.02 1.07 ...
+ $ Total.Volume: num  64237 54877 118220 78992 51040 ...
+ $ X4046       : num  1037 674 795 1132 941 ...
+ $ X4225       : num  54455 44639 109150 71976 43838 ...
+ $ X4770       : num  48.2 58.3 130.5 72.6 75.8 ...
+ $ Total.Bags  : num  8697 9506 8145 5811 6184 ...
+ $ Small.Bags  : num  8604 9408 8042 5677 5986 ...
+ $ Large.Bags  : num  93.2 97.5 103.1 133.8 197.7 ...
+ $ XLarge.Bags : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ type        : chr  "conventional" "conventional" "conventional" "conventional" ...
+ $ year        : int  2015 2015 2015 2015 2015 2015 2015 2015 2015 2015 ...
+ $ region      : chr  "Albany" "Albany" "Albany" "Albany" ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(avocados) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>b) From str(), you can see that the Date column is of type char. To tell R to treat the Date column as a date and not as a string, transform that column using the as.Date() function.</p>
+<ul>
+<li>Hint: You can use mutate().</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>avocados <span class="ot">&lt;-</span> avocados <span class="sc">%&gt;%</span> </span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Date =</span> <span class="fu">as.Date</span>(Date))</span>
+<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(avocados)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   18249 obs. of  14 variables:
+ $ X           : int  0 1 2 3 4 5 6 7 8 9 ...
+ $ Date        : Date, format: "2015-12-27" "2015-12-20" ...
+ $ AveragePrice: num  1.33 1.35 0.93 1.08 1.28 1.26 0.99 0.98 1.02 1.07 ...
+ $ Total.Volume: num  64237 54877 118220 78992 51040 ...
+ $ X4046       : num  1037 674 795 1132 941 ...
+ $ X4225       : num  54455 44639 109150 71976 43838 ...
+ $ X4770       : num  48.2 58.3 130.5 72.6 75.8 ...
+ $ Total.Bags  : num  8697 9506 8145 5811 6184 ...
+ $ Small.Bags  : num  8604 9408 8042 5677 5986 ...
+ $ Large.Bags  : num  93.2 97.5 103.1 133.8 197.7 ...
+ $ XLarge.Bags : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ type        : chr  "conventional" "conventional" "conventional" "conventional" ...
+ $ year        : int  2015 2015 2015 2015 2015 2015 2015 2015 2015 2015 ...
+ $ region      : chr  "Albany" "Albany" "Albany" "Albany" ...</code></pre>
+</div>
+</div>
+<p>c) The file has some uninformative column names. Rename these columns:</p>
+<ul>
+<li><p>X4046 to small_haas</p></li>
+<li><p>X4225 to large_haas</p></li>
+<li><p>X4770 to xlarge_haas</p></li>
+</ul>
+<p>These are the sales volumes of haas avocados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a>avocados <span class="ot">&lt;-</span> avocados <span class="sc">%&gt;%</span> </span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">small_haas =</span> X4046, </span>
+<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">large_haas =</span> X4225, </span>
+<span id="cb118-4"><a href="#cb118-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlarge_haas =</span> X4770)</span>
+<span id="cb118-5"><a href="#cb118-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-6"><a href="#cb118-6" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(avocados)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   18249 obs. of  14 variables:
+ $ X           : int  0 1 2 3 4 5 6 7 8 9 ...
+ $ Date        : Date, format: "2015-12-27" "2015-12-20" ...
+ $ AveragePrice: num  1.33 1.35 0.93 1.08 1.28 1.26 0.99 0.98 1.02 1.07 ...
+ $ Total.Volume: num  64237 54877 118220 78992 51040 ...
+ $ small_haas  : num  1037 674 795 1132 941 ...
+ $ large_haas  : num  54455 44639 109150 71976 43838 ...
+ $ xlarge_haas : num  48.2 58.3 130.5 72.6 75.8 ...
+ $ Total.Bags  : num  8697 9506 8145 5811 6184 ...
+ $ Small.Bags  : num  8604 9408 8042 5677 5986 ...
+ $ Large.Bags  : num  93.2 97.5 103.1 133.8 197.7 ...
+ $ XLarge.Bags : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ type        : chr  "conventional" "conventional" "conventional" "conventional" ...
+ $ year        : int  2015 2015 2015 2015 2015 2015 2015 2015 2015 2015 ...
+ $ region      : chr  "Albany" "Albany" "Albany" "Albany" ...</code></pre>
+</div>
+</div>
+<section id="d-the-data-only-holds-total-sales-volumes-total.volume-and-the-sales-volumes-for-haas-avocados-small_haas-large_haas-xlarge_haas-but-there-are-also-other-avocados-included-in-total.volume.-double-check-this-by-summing-up-haas-avocado-sales-and-comparing-the-sum-with-the-total-sales-value." class="level5">
+<h5 class="anchored" data-anchor-id="d-the-data-only-holds-total-sales-volumes-total.volume-and-the-sales-volumes-for-haas-avocados-small_haas-large_haas-xlarge_haas-but-there-are-also-other-avocados-included-in-total.volume.-double-check-this-by-summing-up-haas-avocado-sales-and-comparing-the-sum-with-the-total-sales-value.">?????d) The data only holds total sales volumes (Total.Volume) and the sales volumes for haas avocados (small_haas, large_haas, xlarge_haas), but there are also other avocados included in Total.Volume. Double-check this by summing up haas avocado sales and comparing the sum with the total sales value.</h5>
+<p>–&gt; Berechnung ist komisch</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(avocados<span class="sc">$</span>Total.Volume <span class="sc">-</span> avocados<span class="sc">$</span>small_haas <span class="sc">+</span> avocados<span class="sc">$</span>large_haas <span class="sc">+</span> avocados<span class="sc">$</span>xlarge_haas <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="co"># 18249 - This is the number of records in  of the data set. It means that on all days the Total Sales Volume is bigger than the Sales Volume of haas avocados.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 18249</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(avocados<span class="sc">$</span>Total.Volume <span class="sc">-</span> avocados<span class="sc">$</span>small_haas <span class="sc">-</span> avocados<span class="sc">$</span>large_haas <span class="sc">-</span> avocados<span class="sc">$</span>xlarge_haas <span class="sc">&gt;</span> <span class="dv">0</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 18240</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="dv">10</span> <span class="sc">-</span> <span class="dv">5</span> <span class="sc">+</span> <span class="dv">3</span> <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="dv">10</span> <span class="sc">-</span> (<span class="dv">5</span> <span class="sc">+</span> <span class="dv">3</span> <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a>y</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">=</span> <span class="dv">10</span> <span class="sc">-</span> <span class="dv">5</span> <span class="sc">-</span> <span class="dv">3</span> <span class="sc">-</span> <span class="dv">1</span> </span>
+<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a>z</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a>haas_avocado_sales <span class="ot">&lt;-</span> avocados<span class="sc">$</span>small_haas <span class="sc">+</span> avocados<span class="sc">$</span>large_haas <span class="sc">+</span> avocados<span class="sc">$</span>xlarge_haas</span>
+<span id="cb130-2"><a href="#cb130-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb130-3"><a href="#cb130-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(avocados<span class="sc">$</span>Total.Volume <span class="sc">-</span> haas_avocado_sales  <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 18237</code></pre>
+</div>
+</div>
+</section>
+<section id="e-create-a-new-column-other_avos-that-is-the-total.volume-minus-all-haas-avocados-small-large-xlarge." class="level5">
+<h5 class="anchored" data-anchor-id="e-create-a-new-column-other_avos-that-is-the-total.volume-minus-all-haas-avocados-small-large-xlarge.">?????e) Create a new column other_avos that is the Total.Volume minus all haas avocados (small, large, xlarge).</h5>
+<p>–&gt; soblad Berechnung bekannt ist kann man es untern in mutate() anpassen!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a>avocados <span class="ot">&lt;-</span> avocados <span class="sc">%&gt;%</span> </span>
+<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">other_avos =</span> Total.Volume <span class="sc">-</span> small_haas <span class="sc">-</span> large_haas <span class="sc">-</span> xlarge_haas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>f) To perform analysis by avocado size, create a dataframe by_size that has only Date, other_avos, small_haas, large_haas, xlarge_haas.</p>
+<ul>
+<li>Note: other_avos is not strictly a size, but we ignore this. We may view it as the bin that holds the sales volumes of avocados of size “unknown”.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb133"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a>by_size <span class="ot">&lt;-</span> avocados <span class="sc">%&gt;%</span> </span>
+<span id="cb133-2"><a href="#cb133-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Date, </span>
+<span id="cb133-3"><a href="#cb133-3" aria-hidden="true" tabindex="-1"></a>         other_avos, </span>
+<span id="cb133-4"><a href="#cb133-4" aria-hidden="true" tabindex="-1"></a>         small_haas, </span>
+<span id="cb133-5"><a href="#cb133-5" aria-hidden="true" tabindex="-1"></a>         large_haas, </span>
+<span id="cb133-6"><a href="#cb133-6" aria-hidden="true" tabindex="-1"></a>         xlarge_haas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>g) Use head() to view the first few lines of your dataframe by_size.</p>
+<ul>
+<li><p>Is it tidy or messy?</p>
+<p><em>messy</em></p></li>
+<li><p>What is the observed event?</p>
+<p><em>At a certain date, a number of avocados of a certain size are sold.</em></p></li>
+<li><p>What are the recorded aspects?</p>
+<p><em>(1) date, (2) size, (3) number sold.</em></p></li>
+<li><p>How would a tidy version of the data look?</p>
+<p><em>(1) keep ‘date’ column.</em></p>
+<p><em>(2) create a ‘size’ column that holds the column names <code>other_avos</code>, <code>small_haas</code>, <code>large_haas</code>, <code>xlarge_haas</code> as values.</em></p>
+<p><em>(3) create a ‘volume’ column that holds the sales volumes.</em></p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(by_size) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Date other_avos small_haas large_haas xlarge_haas
+1 2015-12-27    8696.87    1036.74   54454.85       48.16
+2 2015-12-20    9505.56     674.28   44638.81       58.33
+3 2015-12-13    8145.35     794.70  109149.67      130.50
+4 2015-12-06    5811.16    1132.00   71976.41       72.58
+5 2015-11-29    6183.95     941.48   43838.39       75.78
+6 2015-11-22    6683.91    1184.27   48067.99       43.61</code></pre>
+</div>
+</div>
+<p>h) Tidy it up using pivot_longer(). Store the result in a new data frame by_size_tidy. Hints:</p>
+<ul>
+<li><p>The four column names other_avos, small_haas, large_haas, xlarge_haas go into a new column called size.</p></li>
+<li><p>The volumes of sales (currently stored in each of the above columns) go to a new column called volume.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a>by_size_tidy <span class="ot">&lt;-</span> by_size <span class="sc">%&gt;%</span> </span>
+<span id="cb136-2"><a href="#cb136-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Date,</span>
+<span id="cb136-3"><a href="#cb136-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"size"</span>,</span>
+<span id="cb136-4"><a href="#cb136-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"volume"</span></span>
+<span id="cb136-5"><a href="#cb136-5" aria-hidden="true" tabindex="-1"></a>               )</span>
+<span id="cb136-6"><a href="#cb136-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb136-7"><a href="#cb136-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(by_size_tidy) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  Date       size         volume
+  &lt;date&gt;     &lt;chr&gt;         &lt;dbl&gt;
+1 2015-12-27 other_avos   8697. 
+2 2015-12-27 small_haas   1037. 
+3 2015-12-27 large_haas  54455. 
+4 2015-12-27 xlarge_haas    48.2
+5 2015-12-20 other_avos   9506. 
+6 2015-12-20 small_haas    674. </code></pre>
+</div>
+</div>
+<p>i) The shape of by_size_tidy is not only tidier, but it also facilitates the visualization of sales over time by size: Use ggplot2 with geom_smooth() to plot a smoothed trendline of sales volumes over time – make one trendline for each size. Hints:</p>
+<ul>
+<li><p>Map the Date to the x-axes, map the volume to the y-axes, map the size to the colour scale.</p></li>
+<li><p>Inside of geom_smooth(), you can set the argument se = F to hide the confidence bands around the trendlines.)</p></li>
+</ul>
+<p>Bonus:</p>
+<ul>
+<li>To see the advantage of this shape for plotting sales over time by size, try to produce the same plot using the data frame by_size instead of the data frame by_size_tidy.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(by_size_tidy) <span class="sc">+</span></span>
+<span id="cb138-2"><a href="#cb138-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Date,</span>
+<span id="cb138-3"><a href="#cb138-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">y =</span> volume,</span>
+<span id="cb138-4"><a href="#cb138-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">col =</span> size),</span>
+<span id="cb138-5"><a href="#cb138-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">se =</span> F) <span class="co"># Don't display the confidence intervals around the smoothed conditional means</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Part1_Lecture4_Ex_files/figure-html/unnamed-chunk-70-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb140"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a>by_size <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb140-2"><a href="#cb140-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Date,</span>
+<span id="cb140-3"><a href="#cb140-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">y =</span> small_haas, <span class="at">color =</span> <span class="st">"Small Haas"</span>), <span class="at">se =</span> F) <span class="sc">+</span>    <span class="co"># specify you own label for 'color' inside aes(), e.g., color = "Small Haas". You can use whatever label you wish to appear in the legend (see below)</span></span>
+<span id="cb140-4"><a href="#cb140-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Date,</span>
+<span id="cb140-5"><a href="#cb140-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">y =</span> large_haas, <span class="at">color =</span> <span class="st">"Large Haas"</span>), <span class="at">se =</span> F) <span class="sc">+</span></span>
+<span id="cb140-6"><a href="#cb140-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Date,</span>
+<span id="cb140-7"><a href="#cb140-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">y =</span> xlarge_haas, <span class="at">color =</span> <span class="st">"Xlarge Haas"</span>), <span class="at">se =</span> F) <span class="sc">+</span></span>
+<span id="cb140-8"><a href="#cb140-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Date,</span>
+<span id="cb140-9"><a href="#cb140-9" aria-hidden="true" tabindex="-1"></a>                            <span class="at">y =</span> other_avos, <span class="at">color =</span> <span class="st">"Other"</span>), <span class="at">se =</span> F) <span class="sc">+</span></span>
+<span id="cb140-10"><a href="#cb140-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">"volume"</span>) <span class="sc">+</span> <span class="co"># Specify the title for the axes</span></span>
+<span id="cb140-11"><a href="#cb140-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">name =</span> <span class="st">""</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Small Haas"</span> <span class="ot">=</span> <span class="st">"red"</span>, <span class="st">"Large Haas"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"Xlarge Haas"</span> <span class="ot">=</span> <span class="st">"green"</span>, <span class="st">"Other"</span> <span class="ot">=</span> <span class="st">"yellow"</span>)) <span class="co"># the labels must match what you specified above</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Part1_Lecture4_Ex_files/figure-html/unnamed-chunk-71-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>j) Now use by_size_tidy to compute the average sales volume per size.</p>
+<ul>
+<li>Hint: First group by size using group_by(), then compute the average using summarize().</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a>average_sales <span class="ot">&lt;-</span> by_size_tidy <span class="sc">%&gt;%</span> </span>
+<span id="cb142-2"><a href="#cb142-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(size) <span class="sc">%&gt;%</span> </span>
+<span id="cb142-3"><a href="#cb142-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">avg_volume =</span> <span class="fu">mean</span>(volume))</span>
+<span id="cb142-4"><a href="#cb142-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb142-5"><a href="#cb142-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(average_sales)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  size        avg_volume
+  &lt;chr&gt;            &lt;dbl&gt;
+1 large_haas     295155.
+2 other_avos     239641.
+3 small_haas     293008.
+4 xlarge_haas     22840.</code></pre>
+</div>
+</div>
+</section>
+<section id="k-we-can-also-investigate-sales-by-avocado-type-conventional-organic." class="level5">
+<h5 class="anchored" data-anchor-id="k-we-can-also-investigate-sales-by-avocado-type-conventional-organic.">?????k) We can also investigate sales by avocado type (conventional, organic).</h5>
+<p>–&gt; ohne .groups = ‘drop’ habe ich einen fehler</p>
+<ul>
+<li><p>To do this, consider again the original avocados data frame.</p></li>
+<li><p>Group it by Date and type, and</p></li>
+<li><p>calculate the sum of the column Total.Volume for each group.</p></li>
+<li><p>Store the result in a new data frame called by_type.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb144"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a>by_type <span class="ot">&lt;-</span> avocados <span class="sc">%&gt;%</span> </span>
+<span id="cb144-2"><a href="#cb144-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Date, type) <span class="sc">%&gt;%</span> </span>
+<span id="cb144-3"><a href="#cb144-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">volume =</span> <span class="fu">sum</span>(Total.Volume), <span class="at">.groups =</span> <span class="st">'drop'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>l) This data set is already tidy. Visualize the avocado sales over time by type using geom_smooth().</p>
+<ul>
+<li>Note: This is completely analogous to the plot you did before!</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(by_type) <span class="sc">+</span></span>
+<span id="cb145-2"><a href="#cb145-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Date,</span>
+<span id="cb145-3"><a href="#cb145-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">y =</span> volume,</span>
+<span id="cb145-4"><a href="#cb145-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">col =</span> type),</span>
+<span id="cb145-5"><a href="#cb145-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">se =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Part1_Lecture4_Ex_files/figure-html/unnamed-chunk-74-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>m) From the above plot we see that the sales volumes of both avocado types seem to increase over the years. Now let’s see if we can (visually) confirm this correlation in a scatterplot: if our assumption is correct, we should see a linear correlation between conventional and organic sales. Create this scatterplot using ggplot2. Hints:</p>
+<ul>
+<li><p>In order to check for a linear correlation between the types, we must map conventional sales to the x-axes and organic sales to the y-axes.</p></li>
+<li><p>Yet, in the data frame by_type the sales numbers for both avocado types are mingled in one column, namely volume.</p></li>
+<li><p>To facilitate the plotting, it would be good to have one column per type, each holding the respective sales numbers. Then we could simply map each column to an axes.</p></li>
+<li><p>To achieve this, reformat the data frame by_type using pivot_wider(). Store the result in a new data frame called by_type_wide.</p></li>
+<li><p>Now use ggplot2 with geom_point() to generate the scatterplot. Does it confirm our assumption?</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb147"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a>by_type_wide <span class="ot">&lt;-</span> by_type <span class="sc">%&gt;%</span> </span>
+<span id="cb147-2"><a href="#cb147-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> type, </span>
+<span id="cb147-3"><a href="#cb147-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> volume)</span>
+<span id="cb147-4"><a href="#cb147-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb147-5"><a href="#cb147-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(by_type_wide) <span class="sc">+</span></span>
+<span id="cb147-6"><a href="#cb147-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> conventional, </span>
+<span id="cb147-7"><a href="#cb147-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">y =</span> organic)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Part1_Lecture4_Ex_files/figure-html/unnamed-chunk-75-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><em>As expected, the scatter plot shows some linear correlation between the sales numbers, but it is not too strong. This was expected as well: We could already see in the temporal plot that conventional sales vary much stronger than organic sales, which is reflected in the relatively wide spread of points.</em></p>
+</section>
+</section>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

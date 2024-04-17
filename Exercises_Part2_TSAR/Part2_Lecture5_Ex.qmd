@@ -105,6 +105,7 @@ library(tsibbledata)
 library(tsibble)
 library(ggplot2)
 library(dplyr)
+library(fpp3)
 ```
 
 #### ?????????? interval aus_production wrong(?), autoplots do not work
@@ -122,7 +123,7 @@ interval(aus_production)
 # autoplot does not work: Objects of class <mts> are not supported by autoplot.
 # autoplot(aus_production, Bricks)
 # autoplot(as.ts(aus_production), Bricks)
-# aus_production |> autoplot(Bricks) 
+aus_production |> autoplot(Bricks) 
 
 ggplot(aus_production, aes(x = Quarter, y = Bricks)) +
   geom_line() +
@@ -139,7 +140,7 @@ pelt
 help("pelt")
 
 interval(pelt)
-# Interval is daily. Looking closer at the data, we can see that the index is a Date variable. It also appears that observations occur only on trading days, creating lots of implicit missing values.
+# Interval is yearly. Looking closer at the data, we can see that the index is a Date variable. It also appears that observations occur only on trading days, creating lots of implicit missing values.
 
 # pelt |> autoplot(Lynx)
 ggplot(pelt, aes(x = Year, y = Lynx)) +
@@ -157,7 +158,7 @@ gafa_stock
 help("gafa_stock")
 
 interval(gafa_stock)
-# The time interval is yearly
+# The time interval is daily (irregular)
 
 # gafa_stock |> autoplot(Close)
 # Stock prices for these technology stocks have risen for most of the series, until mid-late 2018.
@@ -208,11 +209,11 @@ us_tsibble <- us_total %>%
 -   Plot the annual natural gas consumption by state for the New England area (comprising the states of Maine, Vermont, New Hampshire, Massachusetts, Connecticut and Rhode Island).
 
 ```{r}
-# us_tsibble %>% 
-#   filter(state %in% c("Maine", "Vermont", "New Hampshire", "Massachusetts",
-#                       "Connecticut", "Rhode Island")) %>% 
-#   autoplot(y/1e3) +
-#   labs(y = "billion cubic feet")
+us_tsibble %>%
+  filter(state %in% c("Maine", "Vermont", "New Hampshire", "Massachusetts",
+                      "Connecticut", "Rhode Island")) %>%
+  autoplot(y/1e3) +
+  labs(y = "billion cubic feet")
 
 filtered_data <- us_tsibble %>%
   filter(state %in% c("Maine", "Vermont", "New Hampshire", "Massachusetts",
