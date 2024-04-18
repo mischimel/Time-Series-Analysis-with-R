@@ -111,7 +111,7 @@ library(fpp3) # needed for autoplot for tsibble
 -   Bricks from aus_production
 
 ```{r}
-aus_production
+head(aus_production)
 
 help("aus_production")
 
@@ -125,7 +125,7 @@ aus_production |> autoplot(Bricks)
 -   Lynx from pelt
 
 ```{r}
-pelt
+head(pelt)
 
 help("pelt")
 
@@ -140,7 +140,7 @@ pelt |> autoplot(Lynx)
 -   Close from gafa_stock.
 
 ```{r}
-gafa_stock
+head(gafa_stock)
 
 help("gafa_stock")
 
@@ -184,6 +184,10 @@ library(USgas)
 -   Create a tsibble from us_total with year as the index and state as the key.
 
 ```{r}
+head(us_total)
+```
+
+```{r}
 help(us_total) # y = yearly total natural gas consumption in a million cubic feet by state or US aggregate
 
 us_tsibble <- us_total %>% 
@@ -199,13 +203,6 @@ us_tsibble %>%
                       "Connecticut", "Rhode Island")) %>%
   autoplot(y/1e3) +
   labs(y = "billion cubic feet")
-
-filtered_data <- us_tsibble %>%
-  filter(state %in% c("Maine", "Vermont", "New Hampshire", "Massachusetts",
-                      "Connecticut", "Rhode Island"))
-
-plot(filtered_data$year, filtered_data$y/1e3,
-     xlab = "Year", ylab = "billion cubic feet")
 ```
 
 2\. Download tourism.xlsx from GitHub and read it into R using readxl::read_excel().
@@ -223,9 +220,35 @@ my_tourism <- readxl::read_excel("tourism.xlsx") %>%
   )
 ```
 
+```{r}
+head(my_tourism)
+```
+
+```{r}
+head(tourism)
+```
+
 -   Find what combination of Region and Purpose had the maximum number of overnight trips on average.
 
+```{r}
+my_tourism %>% 
+  as_tibble() %>% 
+  summarise(Trips = mean(Trips), .by=c(Region, Purpose)) %>% 
+  filter(Trips == max(Trips))
+```
+
 -   Create a new tsibble which combines the Purposes and Regions, and just has total trips by State.
+
+#### ???? who to combine Purpose and Region, when only the total trips by state
+
+```{r}
+state_tourism <- my_tourism %>% 
+  group_by(State) %>% 
+  summarise(Trips = sum(Trips)) %>% 
+  ungroup()
+
+head(state_tourism)
+```
 
 ## 5.3 Visualizing Time Series
 
@@ -237,11 +260,43 @@ my_tourism <- readxl::read_excel("tourism.xlsx") %>%
 
 -   Use autoplot(), gg_season() and gg_subseries() to compare the differences between the arrivals from these four countries.
 
+```{r}
+head(aus_arrivals)
+```
+
+```{r}
+aus_arrivals %>% 
+  autoplot(Arrivals)
+
+# Generally the number of arrivals to Australia is increasing over the entire series, with the exception of Japanese visitors which begin to decline after 1995. The series appear to have a seasonal pattern which varies proportionately to the number of arrivals. Interestingly, the number of visitors from NZ peaks sharply in 1988. The seasonal pattern from Japan appears to change substantially.
+```
+
+```{r}
+
+aus_arrivals %>%  
+  gg_season(Arrivals, labels = "both")
+
+# The seasonal pattern of arrivals appears to vary between each country. In particular, arrivals from the UK appears to be lowest in Q2 and Q3, and increase substantially for Q4 and Q1. Whereas for NZ visitors, the lowest period of arrivals is in Q1, and highest in Q3. Similar variations can be seen for Japan and US.
+```
+
+```{r}
+aus_arrivals %>%  
+  gg_subseries(Arrivals)
+
+# The subseries plot reveals more interesting features. It is evident that whilst the UK arrivals is increasing, most of this increase is seasonal. More arrivals are coming during Q1 and Q4, whilst the increase in Q2 and Q3 is less extreme. The growth in arrivals from NZ and US appears fairly similar across all quarters. There exists an unusual spike in arrivals from the US in 1992 Q3.
+```
+
 -   Can you identify any unusual observations?
+
+    -   *2000 Q3: Spikes from the US (Sydney Olympics arrivals)*
+    -   *2001 Q3-Q4 are unusual for US (9/11 effect)*
+    -   *1991 Q3 is unusual for the US (Gulf war effect?)*
 
 2\. The following time plots and ACF plots correspond to four different time series. Your task is to match each time plot in the first row with one of the ACF plots in the second row.
 
 ![](Materials%20L5/Ex%205.3.PNG)
+
+1-B, 2-A, 3-D, 4-C
 
 ## Self-Study 5.3. Visualizing Time Series
 
@@ -251,13 +306,47 @@ my_tourism <- readxl::read_excel("tourism.xlsx") %>%
 
 -   Read the data into R and store it in the variable tute1.
 
+```{r}
+tute1 <- readr::read_csv("tute1.csv")
+
+head(tute1)
+```
+
 -   View the data set and convert it to time series.
+
+```{r}
+View(tute1)
+
+mytimeseries <- tute1 %>% 
+  mutate(Quarter = yearquarter(Quarter)) %>% 
+  as_tsibble(index = Quarter)
+```
 
 -   Construct time plots of each of the three series.
 
     -   Hint: Consider using pivot_longer() and facet_grid().
 
+```{r}
+mytimeseries %>% 
+  pivot_longer(-Quarter, names_to="Key", values_to="Value") %>% 
+  ggplot(aes(x = Quarter, y = Value, colour = Key)) +
+  geom_line() +
+  facet_grid(vars(Key), scales = "free_y")
+```
+
+```{r}
+# Without faceting:
+mytimeseries %>% 
+  pivot_longer(-Quarter, names_to="Key", values_to="Value") %>% 
+  ggplot(aes(x = Quarter, y = Value, colour = Key)) +
+  geom_line()
+```
+
 2\. The aus_livestock data contains the monthly total number of pigs slaughtered in Victoria, Australia, from Jul 1972 to Dec 2018.
+
+```{r}
+head(aus_livestock)
+```
 
 -   Use filter() to extract pig slaughters in Victoria between 1990 and 1995.
 
@@ -265,8 +354,40 @@ my_tourism <- readxl::read_excel("tourism.xlsx") %>%
 
     -   Hint: The column Month is a time object of class yearmonth. You can access the year in a yearmonth object x by year(x).
 
+```{r}
+vic_pigs <- aus_livestock %>% 
+  filter(Animal == "Pigs", 
+         State == "Victoria", 
+         between(year(Month), 1990, 1995))
+head(vic_pigs)
+```
+
 -   Use autoplot() and ACF() for this data.
+
+```{r}
+vic_pigs %>% 
+  autoplot(Count)
+
+# Although the values appear to vary erratically between months, a general upward trend is evident between 1990 and 1995. In contrast, a white noise plot does not exhibit any trend.
+```
 
 -   How do they differ from white noise?
 
+```{r}
+vic_pigs %>%  
+  ACF(Count) %>% 
+  autoplot()
+
+# The first 14 lags are significant, as the ACF slowly decays. This suggests that the data contains a trend. A white noise ACF plot would not usually contain any significant lags. The large spike at lag 12 suggests there is some seasonality in the data.
+```
+
 -   If a longer period of data is used, what difference does it make to the ACF?
+
+```{r}
+aus_livestock |>
+  filter(Animal == "Pigs", State == "Victoria") |>
+  ACF(Count) |>
+  autoplot()
+
+# The longer series has much larger autocorrelations, plus clear evidence of seasonality at the seasonal lags of 12, 24, ....
+```
