@@ -1,5 +1,5 @@
 ---
-title: "Time Series Analysis with R Part 1, Lecture 5"
+title: "Time Series Analysis with R Part 2, Lecture 5"
 author: "Michèle Fille"
 format: pdf
 prefer-html: true

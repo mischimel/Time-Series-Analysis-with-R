@@ -1,0 +1,19 @@
+---
+title: "Time Series Analysis with R Part 2, Lecture 5"
+author: "Michèle Fille"
+format: pdf
+prefer-html: true
+editor: visual
+toc: true
+toc-depth: 4
+error: false
+warning: true
+---
+
+# Lecture 6 – XXX
+
+## 6.1 XXX
+
+### Exercise 6.1. XXX
+
+#### Exercise 6.1: XXX
