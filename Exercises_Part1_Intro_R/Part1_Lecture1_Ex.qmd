@@ -6,7 +6,7 @@ prefer-html: true
 editor: visual
 toc: true
 toc-depth: 4
-error: true
+error: false
 warning: true
 ---
 
@@ -102,12 +102,11 @@ Do you experience a difference in performance?
 library(readr)
 library(data.table)
 
-fnames <- read_csv("~/Michele_FHNW/Semester_8/Time Series Analysis with R/R_Files/Summary/Materials L1/female_names.csv")
+fnames <- read_csv("female_names.csv")
 
 View(fnames)
-fnames1 <- read.csv("~/Michele_FHNW/Semester_8/Time Series Analysis with R/R_Files/Summary/Materials L1/female_names.csv")
-fnames2 <- fread("~/Michele_FHNW/Semester_8/Time Series Analysis with R/R_Files/Summary/Materials L1/female_names.csv")
-
+fnames1 <- read.csv("female_names.csv")
+fnames2 <- fread("female_names.csv")
 ```
 
 #### Exercise 1.1 – Task 4: Work with Data Types
@@ -160,6 +159,7 @@ What is the output of each of these lines of code? Why?
 -   TRUE + FALSE
 
 ```{r}
+#| error: true
 sqrt(-1) # NaN (Not a Number -> is a complex number, to make it clear sqrt(-1+0i))
 "1" + "5" # Error: strings cannot be conncatenated with +
 1 + 7 # 8
@@ -226,7 +226,6 @@ my_df1 <- data.frame(names = c("Michele", "Noe", "Pariya"),
                     ages = c(28, 22, 26),
                     car_owner = c(TRUE, FALSE, TRUE))
 my_df1
-
 ```
 
 Save your data frame my_df to your disk
@@ -477,7 +476,6 @@ ggplot(data = penguins,
        subtitle = "Source: Palmer Station LTER / palmerpenguins package",
           x = "Flipper Length (mm)", y = "Bill Length (mm)",
        color = "Island") # Set legend title for color scale 
-
 ```
 
 #### Exercise 1.2 – Task 3: Add a Smoothed Trendline
@@ -520,8 +518,9 @@ my_plot <- ggplot(data = penguins,
        x = "Flipper Length (mm)", y = "Bill Length (mm)",
        color = "Island") # Set legend title for color scale
 
-ggplotly(my_plot)
+my_plot # not interactive
 
+#ggplotly(my_plot) # does not work as pdf output
 ```
 
 #### Exercise 1.2 – Task 4: Create a Stacked Bar Plot
@@ -616,7 +615,6 @@ Now answer the following questions:
     *Solution: there are 15 manufacturers (n_unique)*
 
 ```{r}
-
 class(mpg)
 typeof(mpg)
 attributes(mpg) # gives: class, row.names, names(headers)
@@ -678,11 +676,13 @@ unique(mpg$manufacturer)
 
 my_hist_cty <- ggplot(data = mpg) +
   geom_histogram(mapping = aes(x=cty))
-ggplotly(my_hist_cty)
+my_hist_cty # not interactive
+#ggplotly(my_hist_cty) # does not work as pdf output
 
 my_boxplot_cty <- ggplot(data = mpg) +
   geom_boxplot(mapping = aes(y=cty))
-ggplotly(my_boxplot_cty)
+my_boxplot_cty # not interactive
+#ggplotly(my_boxplot_cty) # does not work as pdf output
 
 boxplot.stats(mpg$cty)$out
 ```
@@ -768,7 +768,7 @@ ggplot(data = my_mpg,
   geom_point(mapping = aes(color = year)) + 
   geom_smooth()
 
-ggplotly(my_mpg)
+#ggplotly(my_mpg) # does not work as pdf output
 ```
 
 Now create facets of this plot along the discrete variable year, but don't make it interactive for now.
@@ -850,7 +850,9 @@ my_plot <- ggplot(data = my_mpg,
                      y = hwy)) +
   geom_boxplot(mapping = aes(color = year)) 
 
-ggplotly(my_plot)
+my_plot # not interactive
+
+#ggplotly(my_plot) # does not work as pdf output
 ```
 
 Now create facets of this plot along the variable drv. What new insight(s) does it give you?
@@ -862,13 +864,17 @@ Solution: Most cars with a front-wheel drive are more efficient than 4wds and rw
 
 my_plot_fac <- my_plot + facet_wrap(~ drv)
 
-ggplotly(my_plot_fac)
+my_plot_fac # not interactive
+
+#ggplotly(my_plot_fac) # does not work as pdf output
 ```
 
 Finally let’s take a look at ggpairs: Try to create a pairwise variable plot of mpg using ggpairs().
 
 ```{r}
-ggpairs(mpg)
+#| warning: false
+
+ggpairs(mpg, cardinality_threshold = 38)
 ```
 
 We get an error message here! It says that the categorical variable model has more than 15 levels (i.e. more than 15 different values), ggpairs() cannot display more. Check if this is true by typing length(unique(mpg\$model)).

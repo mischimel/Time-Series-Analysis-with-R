@@ -6,7 +6,7 @@ prefer-html: true
 editor: visual
 toc: true
 toc-depth: 4
-error: true
+error: false
 warning: true
 ---
 

@@ -1,12 +1,12 @@
 ---
 title: "R for Data Analytics Part 1, Lecture 4"
 author: "Michèle Fille"
-format: html
+format: pdf
 prefer-html: true
 editor: visual
 toc: true
 toc-depth: 4
-error: true
+error: false
 warning: true
 ---
 
@@ -625,7 +625,9 @@ p_tidy_cars <- cars_tidy %>% ggplot() +
                          y = freq)) +
   facet_wrap(~ manufacturer)
 
-ggplotly(p_tidy_cars)
+p_tidy_cars # not interactive
+
+#ggplotly(p_tidy_cars) # does not work as pdf output
 ```
 
 d\) Notice that the number of cylinders is not in a natural order. To change that, use mutate() to change the data type of the variable cyl. To do that, you have 2 options:
@@ -660,7 +662,10 @@ p_tidy_cars1 <- cars_tidy1 %>% ggplot() +
   geom_col(mapping = aes(x = cyl,
                          y = freq)) +
   facet_wrap(~ manufacturer)
-ggplotly(p_tidy_cars1)
+
+p_tidy_cars1  # not interactive
+
+#ggplotly(p_tidy_cars1) # does not work as pdf output
 ```
 
 ```{r}
@@ -668,7 +673,10 @@ p_tidy_cars2 <- cars_tidy2 %>% ggplot() +
   geom_col(mapping = aes(x = cyl,
                          y = freq)) +
   facet_wrap(~ manufacturer)
-ggplotly(p_tidy_cars2)
+
+p_tidy_cars2  # not interactive
+
+#ggplotly(p_tidy_cars2) # does not work as pdf output
 ```
 
 -   Do you notice a difference?
