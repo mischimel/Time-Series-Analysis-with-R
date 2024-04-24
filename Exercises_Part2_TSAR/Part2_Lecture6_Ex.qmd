@@ -10,7 +10,7 @@ error: false
 warning: true
 ---
 
-# Lecture 6 – Basic Tools and Models
+# Lecture 6 – Time Series Decomposition and Features
 
 ## 6.1 Time Series Decomposition
 
