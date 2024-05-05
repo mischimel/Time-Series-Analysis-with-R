@@ -1,0 +1,19 @@
+---
+title: "Time Series Analysis with R Part 2, Lecture "
+author: "Michèle Fille"
+format: docx
+prefer-html: true
+editor: visual
+toc: true
+toc-depth: 4
+error: false
+warning: false
+---
+
+# Lecture 7 – Basic Tools and Models for Forecasting
+
+## 7.1 Forecasting Tools
+
+### Exercise .1. xxx
+
+#### Exercise 7.1: xxx

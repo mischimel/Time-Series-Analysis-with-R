@@ -1,13 +1,13 @@
 ---
 title: "Time Series Analysis with R Part 1, Lecture 5"
 author: "Michèle Fille"
-format: html
+format: docx
 prefer-html: true
 editor: visual
 toc: true
 toc-depth: 4
-error: true
-warning: true
+error: false
+warning: false
 ---
 
 # Lecture 5 – Time Series Fundamentals
