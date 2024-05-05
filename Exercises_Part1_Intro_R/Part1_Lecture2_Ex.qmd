@@ -1,13 +1,13 @@
 ---
 title: "R for Data Analytics Part 1, Lecture 2"
 author: "Michèle Fille"
-format: pdf
+format: docx
 prefer-html: true
 editor: visual
 toc: true
 toc-depth: 4
 error: false
-warning: true
+warning: false
 ---
 
 # Lecture 2 - R Fundamentals: Functions and Vectors

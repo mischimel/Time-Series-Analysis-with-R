@@ -1,13 +1,13 @@
 ---
 title: "R for Data Analytics Part 1, Lecture 1"
 author: "Michèle Fille"
-format: pdf
+format: docx
 prefer-html: true
 editor: visual
 toc: true
 toc-depth: 4
 error: false
-warning: true
+warning: false
 ---
 
 # Lecture 1 - Basics and Plotting
@@ -141,6 +141,8 @@ Which of these coercions work? What do they produce?
 -   as.numeric("scooby snacks")
 
 ```{r}
+#| warning: true
+
 as.numeric(FALSE) # 0
 as.logical("Hello!") # NA
 as.integer(4.4) # 4
@@ -160,6 +162,7 @@ What is the output of each of these lines of code? Why?
 
 ```{r}
 #| error: true
+
 sqrt(-1) # NaN (Not a Number -> is a complex number, to make it clear sqrt(-1+0i))
 "1" + "5" # Error: strings cannot be conncatenated with +
 1 + 7 # 8

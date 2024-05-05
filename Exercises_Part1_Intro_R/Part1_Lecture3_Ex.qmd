@@ -1,13 +1,13 @@
 ---
 title: "R for Data Analytics Part 1, Lecture 3"
 author: "Michèle Fille"
-format: pdf
+format: docx
 prefer-html: true
 editor: visual
 toc: true
 toc-depth: 4
 error: false
-warning: true
+warning: false
 ---
 
 # Lecture 3 – Data Structures for Data Science: Lists and Data Frames
